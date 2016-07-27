@@ -5345,6 +5345,11 @@ CONFIG_NVMEM=y
 # CONFIG_FPGA is not set
 
 #
+# AGV FPGA Support
+#
+CONFIG_AGV_FPGA=y
+
+#
 # Firmware Drivers
 #
 CONFIG_ARM_PSCI_FW=y
