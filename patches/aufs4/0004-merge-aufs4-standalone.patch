@@ -1,6 +1,6 @@
-From 7ad5063d6e2e96f0f2a8d2ba552356c25947643d Mon Sep 17 00:00:00 2001
+From 907d6f2cb1189bde8dff83d86e5f1f818d0380a6 Mon Sep 17 00:00:00 2001
 From: Robert Nelson <robertcnelson@gmail.com>
-Date: Fri, 15 Jul 2016 16:08:51 -0500
+Date: Fri, 7 Oct 2016 11:23:45 -0500
 Subject: [PATCH 4/6] merge: aufs4-standalone
 
 Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
@@ -24,10 +24,10 @@ Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
  16 files changed, 40 insertions(+)
 
 diff --git a/fs/dcache.c b/fs/dcache.c
-index 42e0ad6..a6f87e0 100644
+index 7ce0f4a..74d39c5 100644
 --- a/fs/dcache.c
 +++ b/fs/dcache.c
-@@ -1261,6 +1261,7 @@ rename_retry:
+@@ -1264,6 +1264,7 @@ rename_retry:
  	seq = 1;
  	goto again;
  }
@@ -96,7 +96,7 @@ index ad17e05..ae9f267 100644
  void __init files_init(void)
  { 
 diff --git a/fs/inode.c b/fs/inode.c
-index 05c423e..5d437a9 100644
+index 6cc321c..c76d850 100644
 --- a/fs/inode.c
 +++ b/fs/inode.c
 @@ -1593,6 +1593,7 @@ int update_time(struct inode *inode, struct timespec *time, int flags)
@@ -108,7 +108,7 @@ index 05c423e..5d437a9 100644
  /**
   *	touch_atime	-	update the access time
 diff --git a/fs/namespace.c b/fs/namespace.c
-index 0570729..fc50028 100644
+index 5be02a0..dd9d867 100644
 --- a/fs/namespace.c
 +++ b/fs/namespace.c
 @@ -463,6 +463,7 @@ void __mnt_drop_write(struct vfsmount *mnt)
@@ -119,7 +119,7 @@ index 0570729..fc50028 100644
  
  /**
   * mnt_drop_write - give up write access to a mount
-@@ -1803,6 +1804,7 @@ int iterate_mounts(int (*f)(struct vfsmount *, void *), void *arg,
+@@ -1804,6 +1805,7 @@ int iterate_mounts(int (*f)(struct vfsmount *, void *), void *arg,
  	}
  	return 0;
  }
@@ -128,7 +128,7 @@ index 0570729..fc50028 100644
  static void cleanup_group_ids(struct mount *mnt, struct mount *end)
  {
 diff --git a/fs/notify/group.c b/fs/notify/group.c
-index d16b62c..53e45b6 100644
+index 18eb30c..f3ece77 100644
 --- a/fs/notify/group.c
 +++ b/fs/notify/group.c
 @@ -22,6 +22,7 @@
@@ -139,7 +139,7 @@ index d16b62c..53e45b6 100644
  
  #include <linux/fsnotify_backend.h>
  #include "fsnotify.h"
-@@ -72,6 +73,7 @@ void fsnotify_get_group(struct fsnotify_group *group)
+@@ -91,6 +92,7 @@ void fsnotify_get_group(struct fsnotify_group *group)
  {
  	atomic_inc(&group->refcnt);
  }
@@ -147,7 +147,7 @@ index d16b62c..53e45b6 100644
  
  /*
   * Drop a reference to a group.  Free it if it's through.
-@@ -81,6 +83,7 @@ void fsnotify_put_group(struct fsnotify_group *group)
+@@ -100,6 +102,7 @@ void fsnotify_put_group(struct fsnotify_group *group)
  	if (atomic_dec_and_test(&group->refcnt))
  		fsnotify_final_destroy_group(group);
  }
@@ -155,7 +155,7 @@ index d16b62c..53e45b6 100644
  
  /*
   * Create a new fsnotify_group and hold a reference for the group returned.
-@@ -109,6 +112,7 @@ struct fsnotify_group *fsnotify_alloc_group(const struct fsnotify_ops *ops)
+@@ -128,6 +131,7 @@ struct fsnotify_group *fsnotify_alloc_group(const struct fsnotify_ops *ops)
  
  	return group;
  }
@@ -404,5 +404,5 @@ index 46f405c..bc8514e 100644
  int security_mmap_addr(unsigned long addr)
  {
 -- 
-2.8.1
+2.9.3
 

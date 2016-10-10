@@ -1,53 +1,52 @@
-From 1e48e9adb984aa8749b86bec732d9a003b92dde1 Mon Sep 17 00:00:00 2001
+From e4b0b27d42c21d2cf3c7a99802c88dfdb9e4de71 Mon Sep 17 00:00:00 2001
 From: Robert Nelson <robertcnelson@gmail.com>
-Date: Fri, 15 Jul 2016 16:10:53 -0500
+Date: Fri, 7 Oct 2016 11:25:30 -0500
 Subject: [PATCH] backports: tty: from: linux.git
 
 Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
 ---
- drivers/of/fdt.c                             |  51 +--
- drivers/of/fdt_address.c                     |  11 +-
- drivers/tty/serial/8250/8250.h               |  14 +
- drivers/tty/serial/8250/8250_accent.c        |  13 +-
- drivers/tty/serial/8250/8250_acorn.c         |   2 +-
- drivers/tty/serial/8250/8250_bcm2835aux.c    | 146 ++++++++
- drivers/tty/serial/8250/8250_boca.c          |  41 +--
- drivers/tty/serial/8250/8250_core.c          |  48 +--
- drivers/tty/serial/8250/8250_dw.c            | 137 ++++----
- drivers/tty/serial/8250/8250_early.c         |  63 ++--
- drivers/tty/serial/8250/8250_exar_st16c554.c |  17 +-
- drivers/tty/serial/8250/8250_fourport.c      |  28 +-
- drivers/tty/serial/8250/8250_gsc.c           |   7 +-
- drivers/tty/serial/8250/8250_hp300.c         |  27 +-
- drivers/tty/serial/8250/8250_hub6.c          |   2 +-
- drivers/tty/serial/8250/8250_ingenic.c       |  14 +-
- drivers/tty/serial/8250/8250_moxa.c          | 157 +++++++++
- drivers/tty/serial/8250/8250_mtk.c           |  16 +-
- drivers/tty/serial/8250/8250_of.c            | 348 +++++++++++++++++++
- drivers/tty/serial/8250/8250_omap.c          |  40 ++-
- drivers/tty/serial/8250/8250_pci.c           | 147 +++-----
- drivers/tty/serial/8250/8250_pnp.c           |  48 +--
- drivers/tty/serial/8250/8250_port.c          | 478 ++++++++++++++++++++-------
- drivers/tty/serial/8250/8250_uniphier.c      |  24 ++
- drivers/tty/serial/8250/Kconfig              |  62 +++-
- drivers/tty/serial/8250/Makefile             |   3 +
- drivers/tty/serial/8250/serial_cs.c          |  90 ++---
- drivers/tty/serial/Kconfig                   |  77 ++---
- drivers/tty/serial/Makefile                  |   4 +-
- drivers/tty/serial/earlycon.c                | 127 +++++--
- drivers/tty/serial/nwpserial.c               | 477 --------------------------
- drivers/tty/serial/of_serial.c               | 377 ---------------------
- include/asm-generic/vmlinux.lds.h            |   6 +-
- include/linux/of_fdt.h                       |   2 +-
- include/linux/serial_8250.h                  |   8 +
- include/linux/serial_core.h                  |  28 +-
- include/uapi/linux/serial.h                  |   1 +
- 37 files changed, 1689 insertions(+), 1452 deletions(-)
+ drivers/of/fdt.c                                   |  51 ++-
+ drivers/of/fdt_address.c                           |  11 +-
+ drivers/tty/serial/8250/8250.h                     |  14 +
+ drivers/tty/serial/8250/8250_accent.c              |  13 +-
+ drivers/tty/serial/8250/8250_acorn.c               |   2 +-
+ drivers/tty/serial/8250/8250_bcm2835aux.c          | 146 +++++++
+ drivers/tty/serial/8250/8250_boca.c                |  41 +-
+ drivers/tty/serial/8250/8250_core.c                |  48 ++-
+ drivers/tty/serial/8250/8250_dw.c                  | 137 +++---
+ drivers/tty/serial/8250/8250_early.c               |  63 +--
+ drivers/tty/serial/8250/8250_exar_st16c554.c       |  17 +-
+ drivers/tty/serial/8250/8250_fourport.c            |  28 +-
+ drivers/tty/serial/8250/8250_gsc.c                 |   7 +-
+ drivers/tty/serial/8250/8250_hp300.c               |  27 +-
+ drivers/tty/serial/8250/8250_hub6.c                |   2 +-
+ drivers/tty/serial/8250/8250_ingenic.c             |  14 +-
+ drivers/tty/serial/8250/8250_mid.c                 |   3 -
+ drivers/tty/serial/8250/8250_moxa.c                | 157 +++++++
+ drivers/tty/serial/8250/8250_mtk.c                 |  16 +-
+ drivers/tty/serial/{of_serial.c => 8250/8250_of.c} |  39 +-
+ drivers/tty/serial/8250/8250_omap.c                |  40 +-
+ drivers/tty/serial/8250/8250_pci.c                 | 286 +++---------
+ drivers/tty/serial/8250/8250_pnp.c                 |  48 ++-
+ drivers/tty/serial/8250/8250_port.c                | 478 ++++++++++++++++-----
+ drivers/tty/serial/8250/8250_uniphier.c            |  24 ++
+ drivers/tty/serial/8250/Kconfig                    |  62 ++-
+ drivers/tty/serial/8250/Makefile                   |   3 +
+ drivers/tty/serial/8250/serial_cs.c                |  90 ++--
+ drivers/tty/serial/Kconfig                         |  77 ++--
+ drivers/tty/serial/Makefile                        |   4 +-
+ drivers/tty/serial/earlycon.c                      | 127 ++++--
+ drivers/tty/serial/nwpserial.c                     | 477 --------------------
+ include/asm-generic/vmlinux.lds.h                  |   6 +-
+ include/linux/of_fdt.h                             |   2 +-
+ include/linux/serial_8250.h                        |   8 +
+ include/linux/serial_core.h                        |  28 +-
+ include/uapi/linux/serial.h                        |   1 +
+ 37 files changed, 1346 insertions(+), 1251 deletions(-)
  create mode 100644 drivers/tty/serial/8250/8250_bcm2835aux.c
  create mode 100644 drivers/tty/serial/8250/8250_moxa.c
- create mode 100644 drivers/tty/serial/8250/8250_of.c
+ rename drivers/tty/serial/{of_serial.c => 8250/8250_of.c} (91%)
  delete mode 100644 drivers/tty/serial/nwpserial.c
- delete mode 100644 drivers/tty/serial/of_serial.c
 
 diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
 index 655f79d..3349d2a 100644
@@ -1135,7 +1134,7 @@ index a5c778e..27124e2 100644
  		.iobase		= 0x302,				\
  		.irq		= 3,					\
 diff --git a/drivers/tty/serial/8250/8250_ingenic.c b/drivers/tty/serial/8250/8250_ingenic.c
-index 49394b4..b0677f6 100644
+index 49394b4..b0677f61 100644
 --- a/drivers/tty/serial/8250/8250_ingenic.c
 +++ b/drivers/tty/serial/8250/8250_ingenic.c
 @@ -48,6 +48,7 @@ static const struct of_device_id of_match[];
@@ -1177,6 +1176,20 @@ index 49394b4..b0677f6 100644
  		ier = p->serial_in(p, UART_IER);
  
  		if (ier & UART_IER_MSI)
+diff --git a/drivers/tty/serial/8250/8250_mid.c b/drivers/tty/serial/8250/8250_mid.c
+index 83b3988..ed48988 100644
+--- a/drivers/tty/serial/8250/8250_mid.c
++++ b/drivers/tty/serial/8250/8250_mid.c
+@@ -149,9 +149,6 @@ static void mid8250_set_termios(struct uart_port *p,
+ 	unsigned long w = BIT(24) - 1;
+ 	unsigned long mul, div;
+ 
+-	/* Gracefully handle the B0 case: fall back to B9600 */
+-	fuart = fuart ? fuart : 9600 * 16;
+-
+ 	if (mid->board->freq < fuart) {
+ 		/* Find prescaler value that satisfies Fuart < Fref */
+ 		if (mid->board->freq > baud)
 diff --git a/drivers/tty/serial/8250/8250_moxa.c b/drivers/tty/serial/8250/8250_moxa.c
 new file mode 100644
 index 0000000..26eb539
@@ -1412,360 +1425,120 @@ index 78883ca..3489fbc 100644
  static int __init early_mtk8250_setup(struct earlycon_device *device,
  					const char *options)
  {
-diff --git a/drivers/tty/serial/8250/8250_of.c b/drivers/tty/serial/8250/8250_of.c
-new file mode 100644
-index 0000000..c7ed3d2
---- /dev/null
+diff --git a/drivers/tty/serial/of_serial.c b/drivers/tty/serial/8250/8250_of.c
+similarity index 91%
+rename from drivers/tty/serial/of_serial.c
+rename to drivers/tty/serial/8250/8250_of.c
+index de50296..c7ed3d2 100644
+--- a/drivers/tty/serial/of_serial.c
 +++ b/drivers/tty/serial/8250/8250_of.c
-@@ -0,0 +1,348 @@
-+/*
-+ *  Serial Port driver for Open Firmware platform devices
-+ *
-+ *    Copyright (C) 2006 Arnd Bergmann <arnd@arndb.de>, IBM Corp.
-+ *
-+ *  This program is free software; you can redistribute it and/or
-+ *  modify it under the terms of the GNU General Public License
-+ *  as published by the Free Software Foundation; either version
-+ *  2 of the License, or (at your option) any later version.
-+ *
-+ */
-+#include <linux/console.h>
-+#include <linux/module.h>
-+#include <linux/slab.h>
-+#include <linux/delay.h>
-+#include <linux/serial_core.h>
-+#include <linux/serial_reg.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+#include <linux/of_platform.h>
-+#include <linux/clk.h>
-+
+@@ -18,14 +18,9 @@
+ #include <linux/of_address.h>
+ #include <linux/of_irq.h>
+ #include <linux/of_platform.h>
+-#include <linux/nwpserial.h>
+ #include <linux/clk.h>
+ 
+-#ifdef CONFIG_SERIAL_8250_MODULE
+-#define CONFIG_SERIAL_8250 CONFIG_SERIAL_8250_MODULE
+-#endif
+-
+-#include "8250/8250.h"
 +#include "8250.h"
-+
-+struct of_serial_info {
-+	struct clk *clk;
-+	int type;
-+	int line;
-+};
-+
-+#ifdef CONFIG_ARCH_TEGRA
-+void tegra_serial_handle_break(struct uart_port *p)
-+{
-+	unsigned int status, tmout = 10000;
-+
-+	do {
-+		status = p->serial_in(p, UART_LSR);
-+		if (status & (UART_LSR_FIFOE | UART_LSR_BRK_ERROR_BITS))
-+			status = p->serial_in(p, UART_RX);
-+		else
-+			break;
-+		if (--tmout == 0)
-+			break;
-+		udelay(1);
-+	} while (1);
-+}
-+#else
-+static inline void tegra_serial_handle_break(struct uart_port *port)
-+{
-+}
-+#endif
-+
-+/*
-+ * Fill a struct uart_port for a given device node
-+ */
-+static int of_platform_serial_setup(struct platform_device *ofdev,
-+			int type, struct uart_port *port,
-+			struct of_serial_info *info)
-+{
-+	struct resource resource;
-+	struct device_node *np = ofdev->dev.of_node;
-+	u32 clk, spd, prop;
-+	int ret;
-+
-+	memset(port, 0, sizeof *port);
-+	if (of_property_read_u32(np, "clock-frequency", &clk)) {
-+
-+		/* Get clk rate through clk driver if present */
-+		info->clk = devm_clk_get(&ofdev->dev, NULL);
-+		if (IS_ERR(info->clk)) {
-+			dev_warn(&ofdev->dev,
-+				"clk or clock-frequency not defined\n");
-+			return PTR_ERR(info->clk);
-+		}
-+
-+		ret = clk_prepare_enable(info->clk);
-+		if (ret < 0)
-+			return ret;
-+
-+		clk = clk_get_rate(info->clk);
-+	}
-+	/* If current-speed was set, then try not to change it. */
-+	if (of_property_read_u32(np, "current-speed", &spd) == 0)
-+		port->custom_divisor = clk / (16 * spd);
-+
-+	ret = of_address_to_resource(np, 0, &resource);
-+	if (ret) {
-+		dev_warn(&ofdev->dev, "invalid address\n");
-+		goto out;
-+	}
-+
-+	spin_lock_init(&port->lock);
-+	port->mapbase = resource.start;
-+	port->mapsize = resource_size(&resource);
-+
-+	/* Check for shifted address mapping */
-+	if (of_property_read_u32(np, "reg-offset", &prop) == 0)
-+		port->mapbase += prop;
-+
-+	/* Check for registers offset within the devices address range */
-+	if (of_property_read_u32(np, "reg-shift", &prop) == 0)
-+		port->regshift = prop;
-+
-+	/* Check for fifo size */
-+	if (of_property_read_u32(np, "fifo-size", &prop) == 0)
-+		port->fifosize = prop;
-+
-+	/* Check for a fixed line number */
-+	ret = of_alias_get_id(np, "serial");
-+	if (ret >= 0)
-+		port->line = ret;
-+
-+	port->irq = irq_of_parse_and_map(np, 0);
-+	port->iotype = UPIO_MEM;
-+	if (of_property_read_u32(np, "reg-io-width", &prop) == 0) {
-+		switch (prop) {
-+		case 1:
-+			port->iotype = UPIO_MEM;
-+			break;
+ 
+ struct of_serial_info {
+ 	struct clk *clk;
+@@ -122,6 +117,9 @@ static int of_platform_serial_setup(struct platform_device *ofdev,
+ 		case 1:
+ 			port->iotype = UPIO_MEM;
+ 			break;
 +		case 2:
 +			port->iotype = UPIO_MEM16;
 +			break;
-+		case 4:
-+			port->iotype = of_device_is_big_endian(np) ?
-+				       UPIO_MEM32BE : UPIO_MEM32;
-+			break;
-+		default:
-+			dev_warn(&ofdev->dev, "unsupported reg-io-width (%d)\n",
-+				 prop);
-+			ret = -EINVAL;
-+			goto out;
-+		}
-+	}
-+
-+	port->type = type;
-+	port->uartclk = clk;
-+	port->flags = UPF_SHARE_IRQ | UPF_BOOT_AUTOCONF | UPF_IOREMAP
-+		| UPF_FIXED_PORT | UPF_FIXED_TYPE;
-+
-+	if (of_find_property(np, "no-loopback-test", NULL))
-+		port->flags |= UPF_SKIP_TEST;
-+
-+	port->dev = &ofdev->dev;
-+
-+	switch (type) {
-+	case PORT_TEGRA:
-+		port->handle_break = tegra_serial_handle_break;
-+		break;
-+
-+	case PORT_RT2880:
-+		port->iotype = UPIO_AU;
-+		break;
-+	}
-+
-+	if (IS_ENABLED(CONFIG_SERIAL_8250_FSL) &&
-+	    (of_device_is_compatible(np, "fsl,ns16550") ||
-+	     of_device_is_compatible(np, "fsl,16550-FIFO64")))
-+		port->handle_irq = fsl8250_handle_irq;
-+
-+	return 0;
-+out:
-+	if (info->clk)
-+		clk_disable_unprepare(info->clk);
-+	return ret;
-+}
-+
-+/*
-+ * Try to register a serial port
-+ */
-+static const struct of_device_id of_platform_serial_table[];
-+static int of_platform_serial_probe(struct platform_device *ofdev)
-+{
-+	const struct of_device_id *match;
-+	struct of_serial_info *info;
-+	struct uart_port port;
-+	int port_type;
-+	int ret;
-+
-+	match = of_match_device(of_platform_serial_table, &ofdev->dev);
-+	if (!match)
-+		return -EINVAL;
-+
-+	if (of_find_property(ofdev->dev.of_node, "used-by-rtas", NULL))
-+		return -EBUSY;
-+
-+	info = kzalloc(sizeof(*info), GFP_KERNEL);
-+	if (info == NULL)
-+		return -ENOMEM;
-+
-+	port_type = (unsigned long)match->data;
-+	ret = of_platform_serial_setup(ofdev, port_type, &port, info);
-+	if (ret)
-+		goto out;
-+
-+	switch (port_type) {
-+	case PORT_8250 ... PORT_MAX_8250:
-+	{
-+		struct uart_8250_port port8250;
-+		memset(&port8250, 0, sizeof(port8250));
-+		port8250.port = port;
-+
-+		if (port.fifosize)
-+			port8250.capabilities = UART_CAP_FIFO;
-+
-+		if (of_property_read_bool(ofdev->dev.of_node,
-+					  "auto-flow-control"))
-+			port8250.capabilities |= UART_CAP_AFE;
-+
-+		ret = serial8250_register_8250_port(&port8250);
-+		break;
-+	}
-+	default:
-+		/* need to add code for these */
-+	case PORT_UNKNOWN:
-+		dev_info(&ofdev->dev, "Unknown serial port found, ignored\n");
-+		ret = -ENODEV;
-+		break;
-+	}
-+	if (ret < 0)
-+		goto out;
-+
-+	info->type = port_type;
-+	info->line = ret;
-+	platform_set_drvdata(ofdev, info);
-+	return 0;
-+out:
-+	kfree(info);
-+	irq_dispose_mapping(port.irq);
-+	return ret;
-+}
-+
-+/*
-+ * Release a line
-+ */
-+static int of_platform_serial_remove(struct platform_device *ofdev)
-+{
-+	struct of_serial_info *info = platform_get_drvdata(ofdev);
-+	switch (info->type) {
-+	case PORT_8250 ... PORT_MAX_8250:
-+		serial8250_unregister_port(info->line);
-+		break;
-+	default:
-+		/* need to add code for these */
-+		break;
-+	}
-+
-+	if (info->clk)
-+		clk_disable_unprepare(info->clk);
-+	kfree(info);
-+	return 0;
-+}
-+
-+#ifdef CONFIG_PM_SLEEP
-+static void of_serial_suspend_8250(struct of_serial_info *info)
-+{
-+	struct uart_8250_port *port8250 = serial8250_get_port(info->line);
-+	struct uart_port *port = &port8250->port;
-+
-+	serial8250_suspend_port(info->line);
-+	if (info->clk && (!uart_console(port) || console_suspend_enabled))
-+		clk_disable_unprepare(info->clk);
-+}
-+
-+static void of_serial_resume_8250(struct of_serial_info *info)
-+{
-+	struct uart_8250_port *port8250 = serial8250_get_port(info->line);
-+	struct uart_port *port = &port8250->port;
-+
-+	if (info->clk && (!uart_console(port) || console_suspend_enabled))
-+		clk_prepare_enable(info->clk);
-+
-+	serial8250_resume_port(info->line);
-+}
-+
-+static int of_serial_suspend(struct device *dev)
-+{
-+	struct of_serial_info *info = dev_get_drvdata(dev);
-+
-+	switch (info->type) {
-+	case PORT_8250 ... PORT_MAX_8250:
-+		of_serial_suspend_8250(info);
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	return 0;
-+}
-+
-+static int of_serial_resume(struct device *dev)
-+{
-+	struct of_serial_info *info = dev_get_drvdata(dev);
-+
-+	switch (info->type) {
-+	case PORT_8250 ... PORT_MAX_8250:
-+		of_serial_resume_8250(info);
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	return 0;
-+}
-+#endif
-+static SIMPLE_DEV_PM_OPS(of_serial_pm_ops, of_serial_suspend, of_serial_resume);
-+
-+/*
-+ * A few common types, add more as needed.
-+ */
-+static const struct of_device_id of_platform_serial_table[] = {
-+	{ .compatible = "ns8250",   .data = (void *)PORT_8250, },
-+	{ .compatible = "ns16450",  .data = (void *)PORT_16450, },
-+	{ .compatible = "ns16550a", .data = (void *)PORT_16550A, },
-+	{ .compatible = "ns16550",  .data = (void *)PORT_16550, },
-+	{ .compatible = "ns16750",  .data = (void *)PORT_16750, },
-+	{ .compatible = "ns16850",  .data = (void *)PORT_16850, },
-+	{ .compatible = "nvidia,tegra20-uart", .data = (void *)PORT_TEGRA, },
-+	{ .compatible = "nxp,lpc3220-uart", .data = (void *)PORT_LPC3220, },
-+	{ .compatible = "ralink,rt2880-uart", .data = (void *)PORT_RT2880, },
-+	{ .compatible = "altr,16550-FIFO32",
-+		.data = (void *)PORT_ALTR_16550_F32, },
-+	{ .compatible = "altr,16550-FIFO64",
-+		.data = (void *)PORT_ALTR_16550_F64, },
-+	{ .compatible = "altr,16550-FIFO128",
-+		.data = (void *)PORT_ALTR_16550_F128, },
-+	{ .compatible = "mrvl,mmp-uart",
-+		.data = (void *)PORT_XSCALE, },
-+	{ .compatible = "mrvl,pxa-uart",
-+		.data = (void *)PORT_XSCALE, },
-+	{ /* end of list */ },
-+};
-+MODULE_DEVICE_TABLE(of, of_platform_serial_table);
-+
-+static struct platform_driver of_platform_serial_driver = {
-+	.driver = {
-+		.name = "of_serial",
-+		.of_match_table = of_platform_serial_table,
+ 		case 4:
+ 			port->iotype = of_device_is_big_endian(np) ?
+ 				       UPIO_MEM32BE : UPIO_MEM32;
+@@ -195,7 +193,6 @@ static int of_platform_serial_probe(struct platform_device *ofdev)
+ 		goto out;
+ 
+ 	switch (port_type) {
+-#ifdef CONFIG_SERIAL_8250
+ 	case PORT_8250 ... PORT_MAX_8250:
+ 	{
+ 		struct uart_8250_port port8250;
+@@ -212,12 +209,6 @@ static int of_platform_serial_probe(struct platform_device *ofdev)
+ 		ret = serial8250_register_8250_port(&port8250);
+ 		break;
+ 	}
+-#endif
+-#ifdef CONFIG_SERIAL_OF_PLATFORM_NWPSERIAL
+-	case PORT_NWPSERIAL:
+-		ret = nwpserial_register_port(&port);
+-		break;
+-#endif
+ 	default:
+ 		/* need to add code for these */
+ 	case PORT_UNKNOWN:
+@@ -245,16 +236,9 @@ static int of_platform_serial_remove(struct platform_device *ofdev)
+ {
+ 	struct of_serial_info *info = platform_get_drvdata(ofdev);
+ 	switch (info->type) {
+-#ifdef CONFIG_SERIAL_8250
+ 	case PORT_8250 ... PORT_MAX_8250:
+ 		serial8250_unregister_port(info->line);
+ 		break;
+-#endif
+-#ifdef CONFIG_SERIAL_OF_PLATFORM_NWPSERIAL
+-	case PORT_NWPSERIAL:
+-		nwpserial_unregister_port(info->line);
+-		break;
+-#endif
+ 	default:
+ 		/* need to add code for these */
+ 		break;
+@@ -267,7 +251,6 @@ static int of_platform_serial_remove(struct platform_device *ofdev)
+ }
+ 
+ #ifdef CONFIG_PM_SLEEP
+-#ifdef CONFIG_SERIAL_8250
+ static void of_serial_suspend_8250(struct of_serial_info *info)
+ {
+ 	struct uart_8250_port *port8250 = serial8250_get_port(info->line);
+@@ -288,15 +271,6 @@ static void of_serial_resume_8250(struct of_serial_info *info)
+ 
+ 	serial8250_resume_port(info->line);
+ }
+-#else
+-static inline void of_serial_suspend_8250(struct of_serial_info *info)
+-{
+-}
+-
+-static inline void of_serial_resume_8250(struct of_serial_info *info)
+-{
+-}
+-#endif
+ 
+ static int of_serial_suspend(struct device *dev)
+ {
+@@ -353,10 +327,6 @@ static const struct of_device_id of_platform_serial_table[] = {
+ 		.data = (void *)PORT_XSCALE, },
+ 	{ .compatible = "mrvl,pxa-uart",
+ 		.data = (void *)PORT_XSCALE, },
+-#ifdef CONFIG_SERIAL_OF_PLATFORM_NWPSERIAL
+-	{ .compatible = "ibm,qpace-nwp-serial",
+-		.data = (void *)PORT_NWPSERIAL, },
+-#endif
+ 	{ /* end of list */ },
+ };
+ MODULE_DEVICE_TABLE(of, of_platform_serial_table);
+@@ -365,6 +335,7 @@ static struct platform_driver of_platform_serial_driver = {
+ 	.driver = {
+ 		.name = "of_serial",
+ 		.of_match_table = of_platform_serial_table,
 +		.pm = &of_serial_pm_ops,
-+	},
-+	.probe = of_platform_serial_probe,
-+	.remove = of_platform_serial_remove,
-+};
-+
-+module_platform_driver(of_platform_serial_driver);
-+
-+MODULE_AUTHOR("Arnd Bergmann <arnd@arndb.de>");
-+MODULE_LICENSE("GPL");
-+MODULE_DESCRIPTION("Serial Port driver for Open Firmware platform devices");
+ 	},
+ 	.probe = of_platform_serial_probe,
+ 	.remove = of_platform_serial_remove,
 diff --git a/drivers/tty/serial/8250/8250_omap.c b/drivers/tty/serial/8250/8250_omap.c
 index a2c0734..6f76051 100644
 --- a/drivers/tty/serial/8250/8250_omap.c
@@ -1843,7 +1616,7 @@ index a2c0734..6f76051 100644
  	if (pdev->dev.of_node) {
  		const struct of_device_id *id;
 diff --git a/drivers/tty/serial/8250/8250_pci.c b/drivers/tty/serial/8250/8250_pci.c
-index c1d4a8f..4eedd1d 100644
+index 029de3f..4eedd1d 100644
 --- a/drivers/tty/serial/8250/8250_pci.c
 +++ b/drivers/tty/serial/8250/8250_pci.c
 @@ -55,7 +55,6 @@ struct pci_serial_quirk {
@@ -2042,7 +1815,51 @@ index c1d4a8f..4eedd1d 100644
  {
  	port->port.flags |= UPF_FIXED_TYPE;
  	port->port.type = PORT_16850;
-@@ -2249,16 +2224,6 @@ static struct pci_serial_quirk pci_serial_quirks[] __refdata = {
+@@ -1952,43 +1927,6 @@ pci_wch_ch38x_setup(struct serial_private *priv,
+ #define PCI_DEVICE_ID_PERICOM_PI7C9X7954	0x7954
+ #define PCI_DEVICE_ID_PERICOM_PI7C9X7958	0x7958
+ 
+-#define PCI_VENDOR_ID_ACCESIO			0x494f
+-#define PCI_DEVICE_ID_ACCESIO_PCIE_COM_2SDB	0x1051
+-#define PCI_DEVICE_ID_ACCESIO_MPCIE_COM_2S	0x1053
+-#define PCI_DEVICE_ID_ACCESIO_PCIE_COM_4SDB	0x105C
+-#define PCI_DEVICE_ID_ACCESIO_MPCIE_COM_4S	0x105E
+-#define PCI_DEVICE_ID_ACCESIO_PCIE_COM232_2DB	0x1091
+-#define PCI_DEVICE_ID_ACCESIO_MPCIE_COM232_2	0x1093
+-#define PCI_DEVICE_ID_ACCESIO_PCIE_COM232_4DB	0x1099
+-#define PCI_DEVICE_ID_ACCESIO_MPCIE_COM232_4	0x109B
+-#define PCI_DEVICE_ID_ACCESIO_PCIE_COM_2SMDB	0x10D1
+-#define PCI_DEVICE_ID_ACCESIO_MPCIE_COM_2SM	0x10D3
+-#define PCI_DEVICE_ID_ACCESIO_PCIE_COM_4SMDB	0x10DA
+-#define PCI_DEVICE_ID_ACCESIO_MPCIE_COM_4SM	0x10DC
+-#define PCI_DEVICE_ID_ACCESIO_MPCIE_ICM485_1	0x1108
+-#define PCI_DEVICE_ID_ACCESIO_MPCIE_ICM422_2	0x1110
+-#define PCI_DEVICE_ID_ACCESIO_MPCIE_ICM485_2	0x1111
+-#define PCI_DEVICE_ID_ACCESIO_MPCIE_ICM422_4	0x1118
+-#define PCI_DEVICE_ID_ACCESIO_MPCIE_ICM485_4	0x1119
+-#define PCI_DEVICE_ID_ACCESIO_PCIE_ICM_2S	0x1152
+-#define PCI_DEVICE_ID_ACCESIO_PCIE_ICM_4S	0x115A
+-#define PCI_DEVICE_ID_ACCESIO_PCIE_ICM232_2	0x1190
+-#define PCI_DEVICE_ID_ACCESIO_MPCIE_ICM232_2	0x1191
+-#define PCI_DEVICE_ID_ACCESIO_PCIE_ICM232_4	0x1198
+-#define PCI_DEVICE_ID_ACCESIO_MPCIE_ICM232_4	0x1199
+-#define PCI_DEVICE_ID_ACCESIO_PCIE_ICM_2SM	0x11D0
+-#define PCI_DEVICE_ID_ACCESIO_PCIE_COM422_4	0x105A
+-#define PCI_DEVICE_ID_ACCESIO_PCIE_COM485_4	0x105B
+-#define PCI_DEVICE_ID_ACCESIO_PCIE_COM422_8	0x106A
+-#define PCI_DEVICE_ID_ACCESIO_PCIE_COM485_8	0x106B
+-#define PCI_DEVICE_ID_ACCESIO_PCIE_COM232_4	0x1098
+-#define PCI_DEVICE_ID_ACCESIO_PCIE_COM232_8	0x10A9
+-#define PCI_DEVICE_ID_ACCESIO_PCIE_COM_4SM	0x10D9
+-#define PCI_DEVICE_ID_ACCESIO_PCIE_COM_8SM	0x10E9
+-#define PCI_DEVICE_ID_ACCESIO_PCIE_ICM_4SM	0x11D8
+-
+-
+-
+ /* Unknown vendors/cards - this should not be in linux/pci_ids.h */
+ #define PCI_SUBDEVICE_ID_UNKNOWN_0x1584	0x1584
+ #define PCI_SUBDEVICE_ID_UNKNOWN_0x1588	0x1588
+@@ -2286,16 +2224,6 @@ static struct pci_serial_quirk pci_serial_quirks[] __refdata = {
  		.exit		= pci_plx9050_exit,
  	},
  	/*
@@ -2059,7 +1876,7 @@ index c1d4a8f..4eedd1d 100644
  	 * PLX
  	 */
  	{
-@@ -3736,15 +3701,10 @@ static struct pciserial_board pci_boards[] = {
+@@ -3773,15 +3701,10 @@ static struct pciserial_board pci_boards[] = {
  		.base_baud	= 921600,
  		.reg_shift      = 2,
  	},
@@ -2075,7 +1892,7 @@ index c1d4a8f..4eedd1d 100644
  		.reg_shift      = 2,
  	},
  	[pbn_qrk] = {
-@@ -3843,6 +3803,20 @@ static const struct pci_device_id blacklist[] = {
+@@ -3880,6 +3803,20 @@ static const struct pci_device_id blacklist[] = {
  	{ PCI_DEVICE(0x1c00, 0x3250), }, /* WCH CH382 2S1P */
  	{ PCI_DEVICE(0x1c00, 0x3470), }, /* WCH CH384 4S */
  
@@ -2096,7 +1913,7 @@ index c1d4a8f..4eedd1d 100644
  	/* Intel platforms with MID UART */
  	{ PCI_VDEVICE(INTEL, 0x081b), },
  	{ PCI_VDEVICE(INTEL, 0x081c), },
-@@ -4030,12 +4004,6 @@ void pciserial_remove_ports(struct serial_private *priv)
+@@ -4067,12 +4004,6 @@ void pciserial_remove_ports(struct serial_private *priv)
  	for (i = 0; i < priv->nr; i++)
  		serial8250_unregister_port(priv->line[i]);
  
@@ -2109,7 +1926,7 @@ index c1d4a8f..4eedd1d 100644
  	/*
  	 * Find the exit quirks.
  	 */
-@@ -4107,7 +4075,7 @@ pciserial_init_one(struct pci_dev *dev, const struct pci_device_id *ent)
+@@ -4144,7 +4075,7 @@ pciserial_init_one(struct pci_dev *dev, const struct pci_device_id *ent)
  
  	board = &pci_boards[ent->driver_data];
  
@@ -2118,7 +1935,7 @@ index c1d4a8f..4eedd1d 100644
  	pci_save_state(dev);
  	if (rc)
  		return rc;
-@@ -4126,7 +4094,7 @@ pciserial_init_one(struct pci_dev *dev, const struct pci_device_id *ent)
+@@ -4163,7 +4094,7 @@ pciserial_init_one(struct pci_dev *dev, const struct pci_device_id *ent)
  		 */
  		rc = serial_pci_guess_board(dev, &tmp);
  		if (rc)
@@ -2127,7 +1944,7 @@ index c1d4a8f..4eedd1d 100644
  	} else {
  		/*
  		 * We matched an explicit entry.  If we are able to
-@@ -4142,16 +4110,11 @@ pciserial_init_one(struct pci_dev *dev, const struct pci_device_id *ent)
+@@ -4179,16 +4110,11 @@ pciserial_init_one(struct pci_dev *dev, const struct pci_device_id *ent)
  	}
  
  	priv = pciserial_init_ports(dev, board);
@@ -2148,7 +1965,7 @@ index c1d4a8f..4eedd1d 100644
  }
  
  static void pciserial_remove_one(struct pci_dev *dev)
-@@ -4159,8 +4122,6 @@ static void pciserial_remove_one(struct pci_dev *dev)
+@@ -4196,8 +4122,6 @@ static void pciserial_remove_one(struct pci_dev *dev)
  	struct serial_private *priv = pci_get_drvdata(dev);
  
  	pciserial_remove_ports(priv);
@@ -2157,7 +1974,7 @@ index c1d4a8f..4eedd1d 100644
  }
  
  #ifdef CONFIG_PM_SLEEP
-@@ -4541,7 +4502,7 @@ static struct pci_device_id serial_pci_tbl[] = {
+@@ -4578,7 +4502,7 @@ static struct pci_device_id serial_pci_tbl[] = {
  		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
  		pbn_b0_bt_2_921600 },
  	{	PCI_VENDOR_ID_OXSEMI, PCI_DEVICE_ID_OXSEMI_16PCI958,
@@ -2166,6 +1983,115 @@ index c1d4a8f..4eedd1d 100644
  		pbn_b2_8_1152000 },
  
  	/*
+@@ -5157,108 +5081,6 @@ static struct pci_device_id serial_pci_tbl[] = {
+ 		0,
+ 		0, pbn_pericom_PI7C9X7958 },
+ 	/*
+-	 * ACCES I/O Products quad
+-	 */
+-	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_COM_2SDB,
+-		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_pericom_PI7C9X7954 },
+-	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_MPCIE_COM_2S,
+-		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_pericom_PI7C9X7954 },
+-	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_COM_4SDB,
+-		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_pericom_PI7C9X7954 },
+-	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_MPCIE_COM_4S,
+-		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_pericom_PI7C9X7954 },
+-	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_COM232_2DB,
+-		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_pericom_PI7C9X7954 },
+-	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_MPCIE_COM232_2,
+-		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_pericom_PI7C9X7954 },
+-	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_COM232_4DB,
+-		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_pericom_PI7C9X7954 },
+-	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_MPCIE_COM232_4,
+-		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_pericom_PI7C9X7954 },
+-	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_COM_2SMDB,
+-		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_pericom_PI7C9X7954 },
+-	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_MPCIE_COM_2SM,
+-		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_pericom_PI7C9X7954 },
+-	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_COM_4SMDB,
+-		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_pericom_PI7C9X7954 },
+-	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_MPCIE_COM_4SM,
+-		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_pericom_PI7C9X7954 },
+-	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_MPCIE_ICM485_1,
+-		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_pericom_PI7C9X7954 },
+-	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_MPCIE_ICM422_2,
+-		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_pericom_PI7C9X7954 },
+-	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_MPCIE_ICM485_2,
+-		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_pericom_PI7C9X7954 },
+-	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_MPCIE_ICM422_4,
+-		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_pericom_PI7C9X7954 },
+-	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_MPCIE_ICM485_4,
+-		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_pericom_PI7C9X7954 },
+-	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_ICM_2S,
+-		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_pericom_PI7C9X7954 },
+-	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_ICM_4S,
+-		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_pericom_PI7C9X7954 },
+-	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_ICM232_2,
+-		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_pericom_PI7C9X7954 },
+-	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_MPCIE_ICM232_2,
+-		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_pericom_PI7C9X7954 },
+-	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_ICM232_4,
+-		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_pericom_PI7C9X7954 },
+-	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_MPCIE_ICM232_4,
+-		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_pericom_PI7C9X7954 },
+-	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_ICM_2SM,
+-		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_pericom_PI7C9X7954 },
+-	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_COM422_4,
+-		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_pericom_PI7C9X7958 },
+-	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_COM485_4,
+-		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_pericom_PI7C9X7958 },
+-	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_COM422_8,
+-		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_pericom_PI7C9X7958 },
+-	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_COM485_8,
+-		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_pericom_PI7C9X7958 },
+-	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_COM232_4,
+-		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_pericom_PI7C9X7958 },
+-	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_COM232_8,
+-		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_pericom_PI7C9X7958 },
+-	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_COM_4SM,
+-		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_pericom_PI7C9X7958 },
+-	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_COM_8SM,
+-		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_pericom_PI7C9X7958 },
+-	{	PCI_VENDOR_ID_ACCESIO, PCI_DEVICE_ID_ACCESIO_PCIE_ICM_4SM,
+-		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_pericom_PI7C9X7958 },
+-	/*
+ 	 * Topic TP560 Data/Fax/Voice 56k modem (reported by Evan Clarke)
+ 	 */
+ 	{	PCI_VENDOR_ID_TOPIC, PCI_DEVICE_ID_TOPIC_TP560,
 diff --git a/drivers/tty/serial/8250/8250_pnp.c b/drivers/tty/serial/8250/8250_pnp.c
 index 658b392..34f05ed 100644
 --- a/drivers/tty/serial/8250/8250_pnp.c
@@ -4209,391 +4135,8 @@ index 5da7622..0000000
 -}
 -console_initcall(nwpserial_console_init);
 -#endif /* CONFIG_SERIAL_OF_PLATFORM_NWPSERIAL_CONSOLE */
-diff --git a/drivers/tty/serial/of_serial.c b/drivers/tty/serial/of_serial.c
-deleted file mode 100644
-index de50296..0000000
---- a/drivers/tty/serial/of_serial.c
-+++ /dev/null
-@@ -1,377 +0,0 @@
--/*
-- *  Serial Port driver for Open Firmware platform devices
-- *
-- *    Copyright (C) 2006 Arnd Bergmann <arnd@arndb.de>, IBM Corp.
-- *
-- *  This program is free software; you can redistribute it and/or
-- *  modify it under the terms of the GNU General Public License
-- *  as published by the Free Software Foundation; either version
-- *  2 of the License, or (at your option) any later version.
-- *
-- */
--#include <linux/console.h>
--#include <linux/module.h>
--#include <linux/slab.h>
--#include <linux/delay.h>
--#include <linux/serial_core.h>
--#include <linux/serial_reg.h>
--#include <linux/of_address.h>
--#include <linux/of_irq.h>
--#include <linux/of_platform.h>
--#include <linux/nwpserial.h>
--#include <linux/clk.h>
--
--#ifdef CONFIG_SERIAL_8250_MODULE
--#define CONFIG_SERIAL_8250 CONFIG_SERIAL_8250_MODULE
--#endif
--
--#include "8250/8250.h"
--
--struct of_serial_info {
--	struct clk *clk;
--	int type;
--	int line;
--};
--
--#ifdef CONFIG_ARCH_TEGRA
--void tegra_serial_handle_break(struct uart_port *p)
--{
--	unsigned int status, tmout = 10000;
--
--	do {
--		status = p->serial_in(p, UART_LSR);
--		if (status & (UART_LSR_FIFOE | UART_LSR_BRK_ERROR_BITS))
--			status = p->serial_in(p, UART_RX);
--		else
--			break;
--		if (--tmout == 0)
--			break;
--		udelay(1);
--	} while (1);
--}
--#else
--static inline void tegra_serial_handle_break(struct uart_port *port)
--{
--}
--#endif
--
--/*
-- * Fill a struct uart_port for a given device node
-- */
--static int of_platform_serial_setup(struct platform_device *ofdev,
--			int type, struct uart_port *port,
--			struct of_serial_info *info)
--{
--	struct resource resource;
--	struct device_node *np = ofdev->dev.of_node;
--	u32 clk, spd, prop;
--	int ret;
--
--	memset(port, 0, sizeof *port);
--	if (of_property_read_u32(np, "clock-frequency", &clk)) {
--
--		/* Get clk rate through clk driver if present */
--		info->clk = devm_clk_get(&ofdev->dev, NULL);
--		if (IS_ERR(info->clk)) {
--			dev_warn(&ofdev->dev,
--				"clk or clock-frequency not defined\n");
--			return PTR_ERR(info->clk);
--		}
--
--		ret = clk_prepare_enable(info->clk);
--		if (ret < 0)
--			return ret;
--
--		clk = clk_get_rate(info->clk);
--	}
--	/* If current-speed was set, then try not to change it. */
--	if (of_property_read_u32(np, "current-speed", &spd) == 0)
--		port->custom_divisor = clk / (16 * spd);
--
--	ret = of_address_to_resource(np, 0, &resource);
--	if (ret) {
--		dev_warn(&ofdev->dev, "invalid address\n");
--		goto out;
--	}
--
--	spin_lock_init(&port->lock);
--	port->mapbase = resource.start;
--	port->mapsize = resource_size(&resource);
--
--	/* Check for shifted address mapping */
--	if (of_property_read_u32(np, "reg-offset", &prop) == 0)
--		port->mapbase += prop;
--
--	/* Check for registers offset within the devices address range */
--	if (of_property_read_u32(np, "reg-shift", &prop) == 0)
--		port->regshift = prop;
--
--	/* Check for fifo size */
--	if (of_property_read_u32(np, "fifo-size", &prop) == 0)
--		port->fifosize = prop;
--
--	/* Check for a fixed line number */
--	ret = of_alias_get_id(np, "serial");
--	if (ret >= 0)
--		port->line = ret;
--
--	port->irq = irq_of_parse_and_map(np, 0);
--	port->iotype = UPIO_MEM;
--	if (of_property_read_u32(np, "reg-io-width", &prop) == 0) {
--		switch (prop) {
--		case 1:
--			port->iotype = UPIO_MEM;
--			break;
--		case 4:
--			port->iotype = of_device_is_big_endian(np) ?
--				       UPIO_MEM32BE : UPIO_MEM32;
--			break;
--		default:
--			dev_warn(&ofdev->dev, "unsupported reg-io-width (%d)\n",
--				 prop);
--			ret = -EINVAL;
--			goto out;
--		}
--	}
--
--	port->type = type;
--	port->uartclk = clk;
--	port->flags = UPF_SHARE_IRQ | UPF_BOOT_AUTOCONF | UPF_IOREMAP
--		| UPF_FIXED_PORT | UPF_FIXED_TYPE;
--
--	if (of_find_property(np, "no-loopback-test", NULL))
--		port->flags |= UPF_SKIP_TEST;
--
--	port->dev = &ofdev->dev;
--
--	switch (type) {
--	case PORT_TEGRA:
--		port->handle_break = tegra_serial_handle_break;
--		break;
--
--	case PORT_RT2880:
--		port->iotype = UPIO_AU;
--		break;
--	}
--
--	if (IS_ENABLED(CONFIG_SERIAL_8250_FSL) &&
--	    (of_device_is_compatible(np, "fsl,ns16550") ||
--	     of_device_is_compatible(np, "fsl,16550-FIFO64")))
--		port->handle_irq = fsl8250_handle_irq;
--
--	return 0;
--out:
--	if (info->clk)
--		clk_disable_unprepare(info->clk);
--	return ret;
--}
--
--/*
-- * Try to register a serial port
-- */
--static const struct of_device_id of_platform_serial_table[];
--static int of_platform_serial_probe(struct platform_device *ofdev)
--{
--	const struct of_device_id *match;
--	struct of_serial_info *info;
--	struct uart_port port;
--	int port_type;
--	int ret;
--
--	match = of_match_device(of_platform_serial_table, &ofdev->dev);
--	if (!match)
--		return -EINVAL;
--
--	if (of_find_property(ofdev->dev.of_node, "used-by-rtas", NULL))
--		return -EBUSY;
--
--	info = kzalloc(sizeof(*info), GFP_KERNEL);
--	if (info == NULL)
--		return -ENOMEM;
--
--	port_type = (unsigned long)match->data;
--	ret = of_platform_serial_setup(ofdev, port_type, &port, info);
--	if (ret)
--		goto out;
--
--	switch (port_type) {
--#ifdef CONFIG_SERIAL_8250
--	case PORT_8250 ... PORT_MAX_8250:
--	{
--		struct uart_8250_port port8250;
--		memset(&port8250, 0, sizeof(port8250));
--		port8250.port = port;
--
--		if (port.fifosize)
--			port8250.capabilities = UART_CAP_FIFO;
--
--		if (of_property_read_bool(ofdev->dev.of_node,
--					  "auto-flow-control"))
--			port8250.capabilities |= UART_CAP_AFE;
--
--		ret = serial8250_register_8250_port(&port8250);
--		break;
--	}
--#endif
--#ifdef CONFIG_SERIAL_OF_PLATFORM_NWPSERIAL
--	case PORT_NWPSERIAL:
--		ret = nwpserial_register_port(&port);
--		break;
--#endif
--	default:
--		/* need to add code for these */
--	case PORT_UNKNOWN:
--		dev_info(&ofdev->dev, "Unknown serial port found, ignored\n");
--		ret = -ENODEV;
--		break;
--	}
--	if (ret < 0)
--		goto out;
--
--	info->type = port_type;
--	info->line = ret;
--	platform_set_drvdata(ofdev, info);
--	return 0;
--out:
--	kfree(info);
--	irq_dispose_mapping(port.irq);
--	return ret;
--}
--
--/*
-- * Release a line
-- */
--static int of_platform_serial_remove(struct platform_device *ofdev)
--{
--	struct of_serial_info *info = platform_get_drvdata(ofdev);
--	switch (info->type) {
--#ifdef CONFIG_SERIAL_8250
--	case PORT_8250 ... PORT_MAX_8250:
--		serial8250_unregister_port(info->line);
--		break;
--#endif
--#ifdef CONFIG_SERIAL_OF_PLATFORM_NWPSERIAL
--	case PORT_NWPSERIAL:
--		nwpserial_unregister_port(info->line);
--		break;
--#endif
--	default:
--		/* need to add code for these */
--		break;
--	}
--
--	if (info->clk)
--		clk_disable_unprepare(info->clk);
--	kfree(info);
--	return 0;
--}
--
--#ifdef CONFIG_PM_SLEEP
--#ifdef CONFIG_SERIAL_8250
--static void of_serial_suspend_8250(struct of_serial_info *info)
--{
--	struct uart_8250_port *port8250 = serial8250_get_port(info->line);
--	struct uart_port *port = &port8250->port;
--
--	serial8250_suspend_port(info->line);
--	if (info->clk && (!uart_console(port) || console_suspend_enabled))
--		clk_disable_unprepare(info->clk);
--}
--
--static void of_serial_resume_8250(struct of_serial_info *info)
--{
--	struct uart_8250_port *port8250 = serial8250_get_port(info->line);
--	struct uart_port *port = &port8250->port;
--
--	if (info->clk && (!uart_console(port) || console_suspend_enabled))
--		clk_prepare_enable(info->clk);
--
--	serial8250_resume_port(info->line);
--}
--#else
--static inline void of_serial_suspend_8250(struct of_serial_info *info)
--{
--}
--
--static inline void of_serial_resume_8250(struct of_serial_info *info)
--{
--}
--#endif
--
--static int of_serial_suspend(struct device *dev)
--{
--	struct of_serial_info *info = dev_get_drvdata(dev);
--
--	switch (info->type) {
--	case PORT_8250 ... PORT_MAX_8250:
--		of_serial_suspend_8250(info);
--		break;
--	default:
--		break;
--	}
--
--	return 0;
--}
--
--static int of_serial_resume(struct device *dev)
--{
--	struct of_serial_info *info = dev_get_drvdata(dev);
--
--	switch (info->type) {
--	case PORT_8250 ... PORT_MAX_8250:
--		of_serial_resume_8250(info);
--		break;
--	default:
--		break;
--	}
--
--	return 0;
--}
--#endif
--static SIMPLE_DEV_PM_OPS(of_serial_pm_ops, of_serial_suspend, of_serial_resume);
--
--/*
-- * A few common types, add more as needed.
-- */
--static const struct of_device_id of_platform_serial_table[] = {
--	{ .compatible = "ns8250",   .data = (void *)PORT_8250, },
--	{ .compatible = "ns16450",  .data = (void *)PORT_16450, },
--	{ .compatible = "ns16550a", .data = (void *)PORT_16550A, },
--	{ .compatible = "ns16550",  .data = (void *)PORT_16550, },
--	{ .compatible = "ns16750",  .data = (void *)PORT_16750, },
--	{ .compatible = "ns16850",  .data = (void *)PORT_16850, },
--	{ .compatible = "nvidia,tegra20-uart", .data = (void *)PORT_TEGRA, },
--	{ .compatible = "nxp,lpc3220-uart", .data = (void *)PORT_LPC3220, },
--	{ .compatible = "ralink,rt2880-uart", .data = (void *)PORT_RT2880, },
--	{ .compatible = "altr,16550-FIFO32",
--		.data = (void *)PORT_ALTR_16550_F32, },
--	{ .compatible = "altr,16550-FIFO64",
--		.data = (void *)PORT_ALTR_16550_F64, },
--	{ .compatible = "altr,16550-FIFO128",
--		.data = (void *)PORT_ALTR_16550_F128, },
--	{ .compatible = "mrvl,mmp-uart",
--		.data = (void *)PORT_XSCALE, },
--	{ .compatible = "mrvl,pxa-uart",
--		.data = (void *)PORT_XSCALE, },
--#ifdef CONFIG_SERIAL_OF_PLATFORM_NWPSERIAL
--	{ .compatible = "ibm,qpace-nwp-serial",
--		.data = (void *)PORT_NWPSERIAL, },
--#endif
--	{ /* end of list */ },
--};
--MODULE_DEVICE_TABLE(of, of_platform_serial_table);
--
--static struct platform_driver of_platform_serial_driver = {
--	.driver = {
--		.name = "of_serial",
--		.of_match_table = of_platform_serial_table,
--	},
--	.probe = of_platform_serial_probe,
--	.remove = of_platform_serial_remove,
--};
--
--module_platform_driver(of_platform_serial_driver);
--
--MODULE_AUTHOR("Arnd Bergmann <arnd@arndb.de>");
--MODULE_LICENSE("GPL");
--MODULE_DESCRIPTION("Serial Port driver for Open Firmware platform devices");
 diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-index c4bd0e2..e9a81a6 100644
+index ef2e8c9..6b9be10 100644
 --- a/include/asm-generic/vmlinux.lds.h
 +++ b/include/asm-generic/vmlinux.lds.h
 @@ -157,7 +157,7 @@
@@ -4730,5 +4273,5 @@ index 25331f9..5d59c3e 100644
  #define UART_CLEAR_FIFO		0x01
  #define UART_USE_FIFO		0x02
 -- 
-2.8.1
+2.9.3
 
