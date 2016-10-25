@@ -1,6 +1,6 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# Linux/arm 4.4.19 Kernel Configuration
+# Linux/arm 4.4.24 Kernel Configuration
 #
 CONFIG_ARM=y
 CONFIG_ARM_HAS_SG_CHAIN=y
@@ -5463,11 +5463,6 @@ CONFIG_NVMEM=y
 # FPGA Configuration Support
 #
 # CONFIG_FPGA is not set
-
-#
-# AGV FPGA Support
-#
-CONFIG_AGV_FPGA=y
 
 #
 # Firmware Drivers
