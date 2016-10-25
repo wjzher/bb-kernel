@@ -1,6 +1,6 @@
-From f2d735da096c69ecbeb7bd046fb3f980bcdaa5e3 Mon Sep 17 00:00:00 2001
+From 4565cf0df91180af9835920c865cc3204e4d0943 Mon Sep 17 00:00:00 2001
 From: Robert Nelson <robertcnelson@gmail.com>
-Date: Fri, 7 Oct 2016 11:23:45 -0500
+Date: Sat, 22 Oct 2016 16:05:15 -0500
 Subject: [PATCH 3/6] merge: aufs4-mmap
 
 Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
@@ -92,7 +92,7 @@ index faacb0c..17b43be 100644
  		ino = inode->i_ino;
  		pgoff = (loff_t)vma->vm_pgoff << PAGE_SHIFT;
 diff --git a/include/linux/mm.h b/include/linux/mm.h
-index cfebb74..7b39f2c 100644
+index f0ffa01..11db295 100644
 --- a/include/linux/mm.h
 +++ b/include/linux/mm.h
 @@ -1185,6 +1185,28 @@ static inline int fixup_user_fault(struct task_struct *tsk,
