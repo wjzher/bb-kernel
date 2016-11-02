@@ -1,6 +1,6 @@
-From 33b95f14ea3fc0c99bcd126f60abc9fcb6f08d43 Mon Sep 17 00:00:00 2001
+From dbb61fb144370f619eb47736ac9f5fba51f7b202 Mon Sep 17 00:00:00 2001
 From: Robert Nelson <robertcnelson@gmail.com>
-Date: Sat, 22 Oct 2016 16:09:21 -0500
+Date: Mon, 31 Oct 2016 13:33:21 -0500
 Subject: [PATCH] backports: i2c: from: linux.git
 
 Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
@@ -11394,5 +11394,5 @@ index 768063b..96a25ae 100644
  
  static inline struct i2c_client *of_find_i2c_device_by_node(struct device_node *node)
 -- 
-2.9.3
+2.10.1
 

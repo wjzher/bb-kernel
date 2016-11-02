@@ -1,6 +1,6 @@
-From 877621c6973975a857bcaeab0a3d3de0bf6e0d40 Mon Sep 17 00:00:00 2001
+From 1d3485647eb7ec7faa52880e04cd8affe1551739 Mon Sep 17 00:00:00 2001
 From: Robert Nelson <robertcnelson@gmail.com>
-Date: Sat, 22 Oct 2016 16:10:21 -0500
+Date: Mon, 31 Oct 2016 13:34:38 -0500
 Subject: [PATCH] backports: touchscreen: from: linux.git
 
 Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
@@ -8817,5 +8817,5 @@ index c91e137..09d22cc 100644
  
  #endif
 -- 
-2.9.3
+2.10.1
 
