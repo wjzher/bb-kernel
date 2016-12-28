@@ -1,6 +1,6 @@
-From 09d62dddd05e7c52bd812cdb12a5b1f06df75ed3 Mon Sep 17 00:00:00 2001
+From 59751731f762588369995df7ab4a52c3592e5678 Mon Sep 17 00:00:00 2001
 From: Robert Nelson <robertcnelson@gmail.com>
-Date: Thu, 10 Nov 2016 15:58:31 -0600
+Date: Thu, 15 Dec 2016 14:17:11 -0600
 Subject: [PATCH] backports: fbtft: from: linux.git
 
 Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
