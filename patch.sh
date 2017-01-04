@@ -1,4 +1,4 @@
-#!/bin/sh -e
+#!/bin/bash -e
 #
 # Copyright (c) 2009-2016 Robert Nelson <robertcnelson@gmail.com>
 #
@@ -21,6 +21,8 @@
 # THE SOFTWARE.
 
 # Split out, so build_kernel.sh and build_deb.sh can share..
+
+shopt -s nullglob
 
 . ${DIR}/version.sh
 if [ -f ${DIR}/system.sh ] ; then
@@ -69,6 +71,28 @@ cleanup () {
 	exit 2
 }
 
+dir () {
+	wdir="$1"
+	if [ -d "${DIR}/patches/$wdir" ]; then
+		echo "dir: $wdir"
+
+		if [ "x${regenerate}" = "xenable" ] ; then
+			start_cleanup
+		fi
+
+		number=
+		for p in "${DIR}/patches/$wdir/"*.patch; do
+			${git} "$p"
+			number=$(( $number + 1 ))
+		done
+
+		if [ "x${regenerate}" = "xenable" ] ; then
+			cleanup
+		fi
+	fi
+	unset wdir
+}
+
 cherrypick () {
 	if [ ! -d ../patches/${cherrypick_dir} ] ; then
 		mkdir -p ../patches/${cherrypick_dir}
@@ -81,6 +105,7 @@ external_git () {
 	git_tag=""
 	echo "pulling: ${git_tag}"
 	${git_bin} pull --no-edit ${git_patchset} ${git_tag}
+	${git_bin} describe
 }
 
 aufs_fail () {
@@ -119,7 +144,7 @@ aufs4 () {
 		${git_bin} format-patch -4 -o ../patches/aufs4/
 
 		cd ../
-		if [ ! -f ./aufs4-standalone ] ; then
+		if [ ! -d ./aufs4-standalone ] ; then
 			${git_bin} clone https://github.com/sfjro/aufs4-standalone
 			cd ./aufs4-standalone
 			${git_bin} checkout origin/aufs${KERNEL_REL} -b tmp
@@ -143,6 +168,8 @@ aufs4 () {
 		${git_bin} add .
 		${git_bin} commit -a -m 'merge: aufs4' -s
 		${git_bin} format-patch -5 -o ../patches/aufs4/
+
+		rm -rf ../aufs4-standalone/ || true
 
 		exit 2
 	fi
@@ -173,12 +200,6 @@ rt_cleanup () {
 
 rt () {
 	echo "dir: rt"
-
-	#v4.4.28
-	${git_bin} revert --no-edit e765b192093d3b7fc8899bd33b0867492a405ba0
-	${git_bin} revert --no-edit ddafc880082e0e7b809ca84866eeddb2b5ef118e
-	${git_bin} revert --no-edit f84311d7cd04cb1da9f0192417a584543be879a3
-
 	rt_patch="${KERNEL_REL}${kernel_rt}"
 	#regenerate="enable"
 	if [ "x${regenerate}" = "xenable" ] ; then
@@ -247,8 +268,6 @@ post_backports () {
 		mkdir -p ../patches/backports/${subsystem}/
 	fi
 	${git_bin} format-patch -1 -o ../patches/backports/${subsystem}/
-
-	exit 2
 }
 
 patch_backports (){
@@ -284,12 +303,12 @@ lts44_backports () {
 		cp -v ~/linux-src/include/uapi/linux/serial.h ./include/uapi/linux/
 
 		post_backports
+	else
+		patch_backports
 	fi
-	patch_backports
 	${git} "${DIR}/patches/backports/tty/rt-serial-warn-fix.patch"
 
 	subsystem="fbtft"
-	#regenerate="enable"
 	if [ "x${regenerate}" = "xenable" ] ; then
 		pre_backports
 
@@ -297,13 +316,12 @@ lts44_backports () {
 		cp -v ~/linux-src/include/video/mipi_display.h ./include/video/mipi_display.h
 
 		post_backports
+	else
+		patch_backports
 	fi
-	patch_backports
 
 	backport_tag="v4.7.10"
-
 	subsystem="i2c"
-	#regenerate="enable"
 	if [ "x${regenerate}" = "xenable" ] ; then
 		pre_backports
 
@@ -312,11 +330,11 @@ lts44_backports () {
 		cp -v  ~/linux-src/include/linux/i2c.h ./include/linux/
 
 		post_backports
+	else
+		patch_backports
 	fi
-	patch_backports
 
 	subsystem="iio"
-	#regenerate="enable"
 	if [ "x${regenerate}" = "xenable" ] ; then
 		pre_backports
 
@@ -330,14 +348,14 @@ lts44_backports () {
 		cp -v  ~/linux-src/include/uapi/linux/iio/types.h ./include/uapi/linux/iio/types.h
 
 		post_backports
+	else
+		patch_backports
 	fi
-	patch_backports
 	${git} "${DIR}/patches/backports/${subsystem}/0002-kernel-time-timekeeping.c-get_monotonic_coarse64.patch"
 
-	backport_tag="v4.8.6"
+	backport_tag="v4.8.15"
 
 	subsystem="touchscreen"
-	#regenerate="enable"
 	if [ "x${regenerate}" = "xenable" ] ; then
 		pre_backports
 
@@ -345,8 +363,10 @@ lts44_backports () {
 		cp -v ~/linux-src/include/linux/input/touchscreen.h ./include/linux/input/touchscreen.h
 
 		post_backports
+		exit 2
+	else
+		patch_backports
 	fi
-	patch_backports
 
 	echo "dir: lts44_backports"
 	#regenerate="enable"
@@ -673,8 +693,10 @@ bbb_overlays () {
 	${git} "${DIR}/patches/bbb_overlays/0036-of-rename-_node_sysfs-to-_node_post.patch"
 	${git} "${DIR}/patches/bbb_overlays/0037-of-Support-hashtable-lookups-for-phandles.patch"
 
+	${git} "${DIR}/patches/bbb_overlays/0038-bone_capemgr-uboot_capemgr_enabled-flag.patch"
+
 	if [ "x${regenerate}" = "xenable" ] ; then
-		number=37
+		number=38
 		cleanup
 	fi
 }
@@ -934,6 +956,7 @@ beaglebone () {
 	${git} "${DIR}/patches/beaglebone/dtbs/0001-sync-am335x-peripheral-pinmux.patch"
 
 	if [ "x${regenerate}" = "xenable" ] ; then
+		wdir="beaglebone/dtbs"
 		number=1
 		cleanup
 	fi
@@ -1062,6 +1085,47 @@ gcc6 () {
 	fi
 }
 
+sync_mainline_dtc () {
+	echo "dir: dtc"
+	#regenerate="enable"
+	if [ "x${regenerate}" = "xenable" ] ; then
+		cd ../
+		if [ ! -d ./dtc ] ; then
+			${git_bin} clone https://git.kernel.org/pub/scm/utils/dtc/dtc.git
+			cd ./dtc
+			${git_bin} checkout origin/master -b tmp
+			cd ../
+		else
+			rm -rf ./dtc || true
+			${git_bin} clone https://git.kernel.org/pub/scm/utils/dtc/dtc.git
+			cd ./dtc
+			${git_bin} checkout origin/master -b tmp
+			cd ../
+		fi
+		cd ./KERNEL/
+
+		sed -i -e 's:git commit:#git commit:g' ./scripts/dtc/update-dtc-source.sh
+		./scripts/dtc/update-dtc-source.sh
+		sed -i -e 's:#git commit:git commit:g' ./scripts/dtc/update-dtc-source.sh
+		git commit -a -m "scripts/dtc: Update to upstream version overlays" -s
+		git format-patch -1 -o ../patches/dtc/
+		exit 2
+	else
+		#regenerate="enable"
+		if [ "x${regenerate}" = "xenable" ] ; then
+			start_cleanup
+		fi
+
+		${git} "${DIR}/patches/dtc/0001-scripts-dtc-Update-to-upstream-version-overlays.patch"
+
+		if [ "x${regenerate}" = "xenable" ] ; then
+			wdir="dtc"
+			number=1
+			cleanup
+		fi
+	fi
+}
+
 sgx () {
 	echo "dir: sgx"
 	#regenerate="enable"
@@ -1087,6 +1151,7 @@ sgx () {
 lts44_backports
 reverts
 fixes
+dir 'fixes/gcc6'
 ti
 #x15
 pru_uio
@@ -1095,6 +1160,7 @@ bbb_overlays
 beaglebone
 quieter
 gcc6
+sync_mainline_dtc
 sgx
 
 packaging () {
