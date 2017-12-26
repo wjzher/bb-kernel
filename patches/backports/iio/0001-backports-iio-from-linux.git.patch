@@ -1,6 +1,6 @@
-From 0533435ed4c328aaf6635a33aacdfb5de22d7d00 Mon Sep 17 00:00:00 2001
+From 4580873bcc60cf42ea11c107184afdad4921c1b2 Mon Sep 17 00:00:00 2001
 From: Robert Nelson <robertcnelson@gmail.com>
-Date: Sun, 3 Sep 2017 22:49:06 -0500
+Date: Thu, 21 Dec 2017 15:03:32 -0600
 Subject: [PATCH] backports: iio: from: linux.git
 
 Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
@@ -32,18 +32,19 @@ Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
  drivers/iio/accel/stk8ba50.c                       |    1 -
  drivers/iio/adc/Kconfig                            |  122 +-
  drivers/iio/adc/Makefile                           |   10 +
- drivers/iio/adc/ad7793.c                           |    5 +-
+ drivers/iio/adc/ad7793.c                           |    9 +-
  drivers/iio/adc/ad799x.c                           |    2 +-
+ drivers/iio/adc/ad_sigma_delta.c                   |   28 -
  drivers/iio/adc/at91-sama5d2_adc.c                 |  556 ++++++
  drivers/iio/adc/at91_adc.c                         |   10 +-
- drivers/iio/adc/axp288_adc.c                       |    2 +-
+ drivers/iio/adc/axp288_adc.c                       |   34 +-
  drivers/iio/adc/exynos_adc.c                       |  224 ++-
  drivers/iio/adc/fsl-imx25-gcq.c                    |  417 +++++
  drivers/iio/adc/imx7d_adc.c                        |  609 +++++++
  drivers/iio/adc/ina2xx-adc.c                       |  743 ++++++++
  drivers/iio/adc/lpc18xx_adc.c                      |  231 +++
  drivers/iio/adc/max1363.c                          |   12 +-
- drivers/iio/adc/mcp320x.c                          |   59 +-
+ drivers/iio/adc/mcp320x.c                          |   84 +-
  drivers/iio/adc/mcp3422.c                          |   24 +-
  drivers/iio/adc/mxs-lradc.c                        | 1772 ++++++++++++++++++++
  drivers/iio/adc/palmas_gpadc.c                     |  859 ++++++++++
@@ -54,8 +55,9 @@ Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
  drivers/iio/adc/ti-ads1015.c                       |  613 +++++++
  drivers/iio/adc/ti-ads8688.c                       |  486 ++++++
  drivers/iio/adc/ti_am335x_adc.c                    |   13 +-
+ drivers/iio/adc/twl4030-madc.c                     |   10 +-
  drivers/iio/adc/vf610_adc.c                        |   26 +-
- drivers/iio/adc/xilinx-xadc-core.c                 |    2 +-
+ drivers/iio/adc/xilinx-xadc-core.c                 |    8 +-
  drivers/iio/buffer/Kconfig                         |   20 +
  drivers/iio/buffer/Makefile                        |    2 +
  drivers/iio/buffer/industrialio-buffer-dma.c       |  683 ++++++++
@@ -139,7 +141,7 @@ Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
  drivers/iio/imu/kmx61.c                            |   25 +-
  drivers/iio/industrialio-buffer.c                  |  118 +-
  drivers/iio/industrialio-configfs.c                |   51 +
- drivers/iio/industrialio-core.c                    |  134 ++
+ drivers/iio/industrialio-core.c                    |  138 +-
  drivers/iio/industrialio-sw-trigger.c              |  182 ++
  drivers/iio/inkern.c                               |   92 +-
  drivers/iio/light/Kconfig                          |   32 +
@@ -147,6 +149,7 @@ Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
  drivers/iio/light/apds9960.c                       |   16 +-
  drivers/iio/light/bh1750.c                         |    2 +-
  drivers/iio/light/bh1780.c                         |  299 ++++
+ drivers/iio/light/cm3232.c                         |    2 +-
  drivers/iio/light/jsa1212.c                        |    2 +-
  drivers/iio/light/lm3533-als.c                     |    4 +-
  drivers/iio/light/ltr501.c                         |    4 +-
@@ -205,6 +208,8 @@ Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
  drivers/iio/trigger/Kconfig                        |   10 +
  drivers/iio/trigger/Makefile                       |    2 +
  drivers/iio/trigger/iio-trig-hrtimer.c             |  193 +++
+ drivers/iio/trigger/iio-trig-interrupt.c           |    8 +-
+ drivers/iio/trigger/iio-trig-sysfs.c               |    2 +-
  .../staging/iio/Documentation/sysfs-bus-iio-light  |   28 -
  drivers/staging/iio/Kconfig                        |   30 -
  drivers/staging/iio/Makefile                       |    8 -
@@ -225,7 +230,7 @@ Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
  drivers/staging/iio/accel/sca3000_ring.c           |    5 +-
  drivers/staging/iio/adc/Kconfig                    |   23 +-
  drivers/staging/iio/adc/Makefile                   |    8 +-
- drivers/staging/iio/adc/ad7192.c                   |  128 +-
+ drivers/staging/iio/adc/ad7192.c                   |  132 +-
  drivers/staging/iio/adc/ad7280a.c                  |   44 +-
  drivers/staging/iio/adc/ad7280a.h                  |    8 +-
  drivers/staging/iio/adc/ad7606.h                   |   38 +-
@@ -237,7 +242,7 @@ Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
  drivers/staging/iio/adc/spear_adc.c                |   33 +-
  drivers/staging/iio/addac/adt7316-i2c.c            |    2 +-
  drivers/staging/iio/addac/adt7316.c                |   15 +-
- drivers/staging/iio/cdc/ad7150.c                   |   34 +-
+ drivers/staging/iio/cdc/ad7150.c                   |   36 +-
  drivers/staging/iio/cdc/ad7746.c                   |    4 +-
  drivers/staging/iio/frequency/ad9832.c             |    4 +-
  drivers/staging/iio/frequency/ad9834.c             |    2 +-
@@ -260,9 +265,10 @@ Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
  drivers/staging/iio/resolver/ad2s1210.h            |    8 +-
  drivers/staging/iio/trigger/Kconfig                |   10 -
  drivers/staging/iio/trigger/Makefile               |    1 -
- drivers/staging/iio/trigger/iio-trig-bfin-timer.c  |   15 +-
+ drivers/staging/iio/trigger/iio-trig-bfin-timer.c  |   19 +-
  include/dt-bindings/iio/adc/fsl-imx25-gcq.h        |   18 +
  include/dt-bindings/iio/adi,ad5592r.h              |   16 +
+ include/linux/iio/adc/ad_sigma_delta.h             |    3 -
  include/linux/iio/buffer-dma.h                     |  152 ++
  include/linux/iio/buffer-dmaengine.h               |   18 +
  include/linux/iio/buffer.h                         |   18 +
@@ -277,7 +283,7 @@ Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
  include/linux/platform_data/ad5761.h               |   44 +
  include/linux/platform_data/st_sensors_pdata.h     |    2 +
  include/uapi/linux/iio/types.h                     |    3 +
- 272 files changed, 27448 insertions(+), 2450 deletions(-)
+ 278 files changed, 27509 insertions(+), 2523 deletions(-)
  create mode 100644 drivers/iio/accel/mma7455.h
  create mode 100644 drivers/iio/accel/mma7455_core.c
  create mode 100644 drivers/iio/accel/mma7455_i2c.c
@@ -3355,9 +3361,27 @@ index 99b37a963a1e..38638d46f972 100644
  obj-$(CONFIG_TWL4030_MADC) += twl4030-madc.o
  obj-$(CONFIG_TWL6030_GPADC) += twl6030-gpadc.o
 diff --git a/drivers/iio/adc/ad7793.c b/drivers/iio/adc/ad7793.c
-index 4d960d3b93c0..7b07bb651671 100644
+index 91d34ed756ea..7b07bb651671 100644
 --- a/drivers/iio/adc/ad7793.c
 +++ b/drivers/iio/adc/ad7793.c
+@@ -257,7 +257,7 @@ static int ad7793_setup(struct iio_dev *indio_dev,
+ 	unsigned int vref_mv)
+ {
+ 	struct ad7793_state *st = iio_priv(indio_dev);
+-	int i, ret;
++	int i, ret = -1;
+ 	unsigned long long scale_uv;
+ 	u32 id;
+ 
+@@ -266,7 +266,7 @@ static int ad7793_setup(struct iio_dev *indio_dev,
+ 		return ret;
+ 
+ 	/* reset the serial interface */
+-	ret = ad_sd_reset(&st->sd, 32);
++	ret = spi_write(st->sd.spi, (u8 *)&ret, sizeof(ret));
+ 	if (ret < 0)
+ 		goto out;
+ 	usleep_range(500, 2000); /* Wait for at least 500us */
 @@ -478,10 +478,9 @@ static int ad7793_read_raw(struct iio_dev *indio_dev,
  				*val2 = st->
  					scale_avail[(st->conf >> 8) & 0x7][1];
@@ -3384,6 +3408,45 @@ index ba82de25a797..03962233501c 100644
  
  	return IIO_VAL_INT;
  }
+diff --git a/drivers/iio/adc/ad_sigma_delta.c b/drivers/iio/adc/ad_sigma_delta.c
+index 22c4c17cd996..d10bd0c97233 100644
+--- a/drivers/iio/adc/ad_sigma_delta.c
++++ b/drivers/iio/adc/ad_sigma_delta.c
+@@ -177,34 +177,6 @@ out:
+ }
+ EXPORT_SYMBOL_GPL(ad_sd_read_reg);
+ 
+-/**
+- * ad_sd_reset() - Reset the serial interface
+- *
+- * @sigma_delta: The sigma delta device
+- * @reset_length: Number of SCLKs with DIN = 1
+- *
+- * Returns 0 on success, an error code otherwise.
+- **/
+-int ad_sd_reset(struct ad_sigma_delta *sigma_delta,
+-	unsigned int reset_length)
+-{
+-	uint8_t *buf;
+-	unsigned int size;
+-	int ret;
+-
+-	size = DIV_ROUND_UP(reset_length, 8);
+-	buf = kcalloc(size, sizeof(*buf), GFP_KERNEL);
+-	if (!buf)
+-		return -ENOMEM;
+-
+-	memset(buf, 0xff, size);
+-	ret = spi_write(sigma_delta->spi, buf, size);
+-	kfree(buf);
+-
+-	return ret;
+-}
+-EXPORT_SYMBOL_GPL(ad_sd_reset);
+-
+ static int ad_sd_calibrate(struct ad_sigma_delta *sigma_delta,
+ 	unsigned int mode, unsigned int channel)
+ {
 diff --git a/drivers/iio/adc/at91-sama5d2_adc.c b/drivers/iio/adc/at91-sama5d2_adc.c
 new file mode 100644
 index 000000000000..e10dca3ed74b
@@ -3988,10 +4051,19 @@ index 93986f0590ef..0438c68015e8 100644
  		i++;
  	}
 diff --git a/drivers/iio/adc/axp288_adc.c b/drivers/iio/adc/axp288_adc.c
-index 0c904edd6c00..7fd24949c0c1 100644
+index f684fe31f832..7fd24949c0c1 100644
 --- a/drivers/iio/adc/axp288_adc.c
 +++ b/drivers/iio/adc/axp288_adc.c
-@@ -46,7 +46,7 @@ struct axp288_adc_info {
+@@ -28,6 +28,8 @@
+ #include <linux/iio/driver.h>
+ 
+ #define AXP288_ADC_EN_MASK		0xF1
++#define AXP288_ADC_TS_PIN_GPADC		0xF2
++#define AXP288_ADC_TS_PIN_ON		0xF3
+ 
+ enum axp288_adc_id {
+ 	AXP288_ADC_TS,
+@@ -44,7 +46,7 @@ struct axp288_adc_info {
  	struct regmap *regmap;
  };
  
@@ -4000,6 +4072,65 @@ index 0c904edd6c00..7fd24949c0c1 100644
  	{
  		.indexed = 1,
  		.type = IIO_TEMP,
+@@ -121,6 +123,16 @@ static int axp288_adc_read_channel(int *val, unsigned long address,
+ 	return IIO_VAL_INT;
+ }
+ 
++static int axp288_adc_set_ts(struct regmap *regmap, unsigned int mode,
++				unsigned long address)
++{
++	/* channels other than GPADC do not need to switch TS pin */
++	if (address != AXP288_GP_ADC_H)
++		return 0;
++
++	return regmap_write(regmap, AXP288_ADC_TS_PIN_CTRL, mode);
++}
++
+ static int axp288_adc_read_raw(struct iio_dev *indio_dev,
+ 			struct iio_chan_spec const *chan,
+ 			int *val, int *val2, long mask)
+@@ -131,7 +143,16 @@ static int axp288_adc_read_raw(struct iio_dev *indio_dev,
+ 	mutex_lock(&indio_dev->mlock);
+ 	switch (mask) {
+ 	case IIO_CHAN_INFO_RAW:
++		if (axp288_adc_set_ts(info->regmap, AXP288_ADC_TS_PIN_GPADC,
++					chan->address)) {
++			dev_err(&indio_dev->dev, "GPADC mode\n");
++			ret = -EINVAL;
++			break;
++		}
+ 		ret = axp288_adc_read_channel(val, chan->address, info->regmap);
++		if (axp288_adc_set_ts(info->regmap, AXP288_ADC_TS_PIN_ON,
++						chan->address))
++			dev_err(&indio_dev->dev, "TS pin restore\n");
+ 		break;
+ 	default:
+ 		ret = -EINVAL;
+@@ -141,6 +162,15 @@ static int axp288_adc_read_raw(struct iio_dev *indio_dev,
+ 	return ret;
+ }
+ 
++static int axp288_adc_set_state(struct regmap *regmap)
++{
++	/* ADC should be always enabled for internal FG to function */
++	if (regmap_write(regmap, AXP288_ADC_TS_PIN_CTRL, AXP288_ADC_TS_PIN_ON))
++		return -EIO;
++
++	return regmap_write(regmap, AXP20X_ADC_EN1, AXP288_ADC_EN_MASK);
++}
++
+ static const struct iio_info axp288_adc_iio_info = {
+ 	.read_raw = &axp288_adc_read_raw,
+ 	.driver_module = THIS_MODULE,
+@@ -169,7 +199,7 @@ static int axp288_adc_probe(struct platform_device *pdev)
+ 	 * Set ADC to enabled state at all time, including system suspend.
+ 	 * otherwise internal fuel gauge functionality may be affected.
+ 	 */
+-	ret = regmap_write(info->regmap, AXP20X_ADC_EN1, AXP288_ADC_EN_MASK);
++	ret = axp288_adc_set_state(axp20x->regmap);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "unable to enable ADC device\n");
+ 		return ret;
 diff --git a/drivers/iio/adc/exynos_adc.c b/drivers/iio/adc/exynos_adc.c
 index 3a2dbb3b4926..c15756d7bf7f 100644
 --- a/drivers/iio/adc/exynos_adc.c
@@ -6436,10 +6567,73 @@ index 929508e5266c..998dc3caad4c 100644
  };
  
 diff --git a/drivers/iio/adc/mcp320x.c b/drivers/iio/adc/mcp320x.c
-index 8569c8e1f4b2..a850ca7d1eda 100644
+index ad2681acce9a..a850ca7d1eda 100644
 --- a/drivers/iio/adc/mcp320x.c
 +++ b/drivers/iio/adc/mcp320x.c
-@@ -187,26 +187,27 @@ out:
+@@ -17,8 +17,6 @@
+  * MCP3204
+  * MCP3208
+  * ------------
+- * 13 bit converter
+- * MCP3301
+  *
+  * Datasheet can be found here:
+  * http://ww1.microchip.com/downloads/en/DeviceDoc/21293C.pdf  mcp3001
+@@ -98,7 +96,7 @@ static int mcp320x_channel_to_tx_data(int device_index,
+ }
+ 
+ static int mcp320x_adc_conversion(struct mcp320x *adc, u8 channel,
+-				  bool differential, int device_index, int *val)
++				  bool differential, int device_index)
+ {
+ 	int ret;
+ 
+@@ -119,25 +117,19 @@ static int mcp320x_adc_conversion(struct mcp320x *adc, u8 channel,
+ 
+ 	switch (device_index) {
+ 	case mcp3001:
+-		*val = (adc->rx_buf[0] << 5 | adc->rx_buf[1] >> 3);
+-		return 0;
++		return (adc->rx_buf[0] << 5 | adc->rx_buf[1] >> 3);
+ 	case mcp3002:
+ 	case mcp3004:
+ 	case mcp3008:
+-		*val = (adc->rx_buf[0] << 2 | adc->rx_buf[1] >> 6);
+-		return 0;
++		return (adc->rx_buf[0] << 2 | adc->rx_buf[1] >> 6);
+ 	case mcp3201:
+-		*val = (adc->rx_buf[0] << 7 | adc->rx_buf[1] >> 1);
+-		return 0;
++		return (adc->rx_buf[0] << 7 | adc->rx_buf[1] >> 1);
+ 	case mcp3202:
+ 	case mcp3204:
+ 	case mcp3208:
+-		*val = (adc->rx_buf[0] << 4 | adc->rx_buf[1] >> 4);
+-		return 0;
++		return (adc->rx_buf[0] << 4 | adc->rx_buf[1] >> 4);
+ 	case mcp3301:
+-		*val = sign_extend32((adc->rx_buf[0] & 0x1f) << 8
+-				    | adc->rx_buf[1], 12);
+-		return 0;
++		return sign_extend32((adc->rx_buf[0] & 0x1f) << 8 | adc->rx_buf[1], 12);
+ 	default:
+ 		return -EINVAL;
+ 	}
+@@ -158,10 +150,12 @@ static int mcp320x_read_raw(struct iio_dev *indio_dev,
+ 	switch (mask) {
+ 	case IIO_CHAN_INFO_RAW:
+ 		ret = mcp320x_adc_conversion(adc, channel->address,
+-			channel->differential, device_index, val);
++			channel->differential, device_index);
++
+ 		if (ret < 0)
+ 			goto out;
+ 
++		*val = ret;
+ 		ret = IIO_VAL_INT;
+ 		break;
+ 
+@@ -193,26 +187,27 @@ out:
  		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE) \
  	}
  
@@ -6473,7 +6667,7 @@ index 8569c8e1f4b2..a850ca7d1eda 100644
  };
  
  static const struct iio_chan_spec mcp3204_channels[] = {
-@@ -214,8 +215,10 @@ static const struct iio_chan_spec mcp3204_channels[] = {
+@@ -220,8 +215,10 @@ static const struct iio_chan_spec mcp3204_channels[] = {
  	MCP320X_VOLTAGE_CHANNEL(1),
  	MCP320X_VOLTAGE_CHANNEL(2),
  	MCP320X_VOLTAGE_CHANNEL(3),
@@ -6486,7 +6680,7 @@ index 8569c8e1f4b2..a850ca7d1eda 100644
  };
  
  static const struct iio_chan_spec mcp3208_channels[] = {
-@@ -227,10 +230,14 @@ static const struct iio_chan_spec mcp3208_channels[] = {
+@@ -233,10 +230,14 @@ static const struct iio_chan_spec mcp3208_channels[] = {
  	MCP320X_VOLTAGE_CHANNEL(5),
  	MCP320X_VOLTAGE_CHANNEL(6),
  	MCP320X_VOLTAGE_CHANNEL(7),
@@ -6505,7 +6699,15 @@ index 8569c8e1f4b2..a850ca7d1eda 100644
  };
  
  static const struct iio_info mcp320x_info = {
-@@ -354,6 +361,7 @@ static int mcp320x_remove(struct spi_device *spi)
+@@ -310,7 +311,6 @@ static int mcp320x_probe(struct spi_device *spi)
+ 	indio_dev->name = spi_get_device_id(spi)->name;
+ 	indio_dev->modes = INDIO_DIRECT_MODE;
+ 	indio_dev->info = &mcp320x_info;
+-	spi_set_drvdata(spi, indio_dev);
+ 
+ 	chip_info = &mcp320x_chip_infos[spi_get_device_id(spi)->driver_data];
+ 	indio_dev->channels = chip_info->channels;
+@@ -361,6 +361,7 @@ static int mcp320x_remove(struct spi_device *spi)
  
  #if defined(CONFIG_OF)
  static const struct of_device_id mcp320x_dt_ids[] = {
@@ -6513,7 +6715,7 @@ index 8569c8e1f4b2..a850ca7d1eda 100644
  	{
  		.compatible = "mcp3001",
  		.data = &mcp320x_chip_infos[mcp3001],
-@@ -381,6 +389,33 @@ static const struct of_device_id mcp320x_dt_ids[] = {
+@@ -388,6 +389,33 @@ static const struct of_device_id mcp320x_dt_ids[] = {
  	}, {
  		.compatible = "mcp3301",
  		.data = &mcp320x_chip_infos[mcp3301],
@@ -11025,6 +11227,38 @@ index 9b6854607d73..0470fc843d4e 100644
  		tiadc_writel(adc_dev, REG_CTRL, (config | CNTRLREG_TSCSSENB));
  		return IRQ_HANDLED;
  	} else if (status & IRQENB_FIFO1THRES) {
+diff --git a/drivers/iio/adc/twl4030-madc.c b/drivers/iio/adc/twl4030-madc.c
+index 7ffc5db4d7ee..0c74869a540a 100644
+--- a/drivers/iio/adc/twl4030-madc.c
++++ b/drivers/iio/adc/twl4030-madc.c
+@@ -866,10 +866,8 @@ static int twl4030_madc_probe(struct platform_device *pdev)
+ 
+ 	/* Enable 3v1 bias regulator for MADC[3:6] */
+ 	madc->usb3v1 = devm_regulator_get(madc->dev, "vusb3v1");
+-	if (IS_ERR(madc->usb3v1)) {
+-		ret = -ENODEV;
+-		goto err_i2c;
+-	}
++	if (IS_ERR(madc->usb3v1))
++		return -ENODEV;
+ 
+ 	ret = regulator_enable(madc->usb3v1);
+ 	if (ret)
+@@ -878,13 +876,11 @@ static int twl4030_madc_probe(struct platform_device *pdev)
+ 	ret = iio_device_register(iio_dev);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "could not register iio device\n");
+-		goto err_usb3v1;
++		goto err_i2c;
+ 	}
+ 
+ 	return 0;
+ 
+-err_usb3v1:
+-	regulator_disable(madc->usb3v1);
+ err_i2c:
+ 	twl4030_madc_set_current_generator(madc, 0, 0);
+ err_current_generator:
 diff --git a/drivers/iio/adc/vf610_adc.c b/drivers/iio/adc/vf610_adc.c
 index 1dbc2143cdfc..653bf1379d2e 100644
 --- a/drivers/iio/adc/vf610_adc.c
@@ -11071,7 +11305,7 @@ index 1dbc2143cdfc..653bf1379d2e 100644
  
  	return -EINVAL;
 diff --git a/drivers/iio/adc/xilinx-xadc-core.c b/drivers/iio/adc/xilinx-xadc-core.c
-index 02e636a1c49a..0a6beb3d99cb 100644
+index 475c5a74f2d1..0a6beb3d99cb 100644
 --- a/drivers/iio/adc/xilinx-xadc-core.c
 +++ b/drivers/iio/adc/xilinx-xadc-core.c
 @@ -803,7 +803,7 @@ err:
@@ -11083,6 +11317,33 @@ index 02e636a1c49a..0a6beb3d99cb 100644
  	.preenable = &xadc_preenable,
  	.postenable = &iio_triggered_buffer_postenable,
  	.predisable = &iio_triggered_buffer_predisable,
+@@ -1208,7 +1208,7 @@ static int xadc_probe(struct platform_device *pdev)
+ 
+ 	ret = xadc->ops->setup(pdev, indio_dev, irq);
+ 	if (ret)
+-		goto err_clk_disable_unprepare;
++		goto err_free_samplerate_trigger;
+ 
+ 	ret = request_irq(irq, xadc->ops->interrupt_handler, 0,
+ 			dev_name(&pdev->dev), indio_dev);
+@@ -1268,8 +1268,6 @@ static int xadc_probe(struct platform_device *pdev)
+ 
+ err_free_irq:
+ 	free_irq(irq, indio_dev);
+-err_clk_disable_unprepare:
+-	clk_disable_unprepare(xadc->clk);
+ err_free_samplerate_trigger:
+ 	if (xadc->ops->flags & XADC_FLAGS_BUFFERED)
+ 		iio_trigger_free(xadc->samplerate_trigger);
+@@ -1279,6 +1277,8 @@ err_free_convst_trigger:
+ err_triggered_buffer_cleanup:
+ 	if (xadc->ops->flags & XADC_FLAGS_BUFFERED)
+ 		iio_triggered_buffer_cleanup(indio_dev);
++err_clk_disable_unprepare:
++	clk_disable_unprepare(xadc->clk);
+ err_device_free:
+ 	kfree(indio_dev->channels);
+ 
 diff --git a/drivers/iio/buffer/Kconfig b/drivers/iio/buffer/Kconfig
 index 0a7b2fd3699b..4ffd3db7817f 100644
 --- a/drivers/iio/buffer/Kconfig
@@ -25084,7 +25345,7 @@ index 000000000000..45ce2bc47180
 +MODULE_DESCRIPTION("Industrial I/O configfs support");
 +MODULE_LICENSE("GPL v2");
 diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
-index 131b434af994..2e6a427588e1 100644
+index e08a3c794120..2e6a427588e1 100644
 --- a/drivers/iio/industrialio-core.c
 +++ b/drivers/iio/industrialio-core.c
 @@ -25,6 +25,7 @@
@@ -25112,7 +25373,19 @@ index 131b434af994..2e6a427588e1 100644
  	[IIO_MOD_QUATERNION] = "quaternion",
  	[IIO_MOD_TEMP_AMBIENT] = "ambient",
  	[IIO_MOD_TEMP_OBJECT] = "object",
-@@ -408,6 +412,88 @@ ssize_t iio_enum_write(struct iio_dev *indio_dev,
+@@ -221,10 +225,8 @@ static ssize_t iio_debugfs_read_reg(struct file *file, char __user *userbuf,
+ 	ret = indio_dev->info->debugfs_reg_access(indio_dev,
+ 						  indio_dev->cached_reg_addr,
+ 						  0, &val);
+-	if (ret) {
++	if (ret)
+ 		dev_err(indio_dev->dev.parent, "%s: read failed\n", __func__);
+-		return ret;
+-	}
+ 
+ 	len = snprintf(buf, sizeof(buf), "0x%X\n", val);
+ 
+@@ -410,6 +412,88 @@ ssize_t iio_enum_write(struct iio_dev *indio_dev,
  }
  EXPORT_SYMBOL_GPL(iio_enum_write);
  
@@ -25201,7 +25474,7 @@ index 131b434af994..2e6a427588e1 100644
  /**
   * iio_format_value() - Formats a IIO value into its string representation
   * @buf:	The buffer to which the formatted value gets written
-@@ -468,6 +554,7 @@ ssize_t iio_format_value(char *buf, unsigned int type, int size, int *vals)
+@@ -470,6 +554,7 @@ ssize_t iio_format_value(char *buf, unsigned int type, int size, int *vals)
  		return 0;
  	}
  }
@@ -25209,7 +25482,7 @@ index 131b434af994..2e6a427588e1 100644
  
  static ssize_t iio_read_channel_info(struct device *dev,
  				     struct device_attribute *attr,
-@@ -510,6 +597,12 @@ int iio_str_to_fixpoint(const char *str, int fract_mult,
+@@ -512,6 +597,12 @@ int iio_str_to_fixpoint(const char *str, int fract_mult,
  	int i = 0, f = 0;
  	bool integer_part = true, negative = false;
  
@@ -25222,7 +25495,7 @@ index 131b434af994..2e6a427588e1 100644
  	if (str[0] == '-') {
  		negative = true;
  		str++;
-@@ -569,6 +662,9 @@ static ssize_t iio_write_channel_info(struct device *dev,
+@@ -571,6 +662,9 @@ static ssize_t iio_write_channel_info(struct device *dev,
  	if (indio_dev->info->write_raw_get_fmt)
  		switch (indio_dev->info->write_raw_get_fmt(indio_dev,
  			this_attr->c, this_attr->address)) {
@@ -25232,7 +25505,7 @@ index 131b434af994..2e6a427588e1 100644
  		case IIO_VAL_INT_PLUS_MICRO:
  			fract_mult = 100000;
  			break;
-@@ -1363,6 +1459,44 @@ void devm_iio_device_unregister(struct device *dev, struct iio_dev *indio_dev)
+@@ -1365,6 +1459,44 @@ void devm_iio_device_unregister(struct device *dev, struct iio_dev *indio_dev)
  }
  EXPORT_SYMBOL_GPL(devm_iio_device_unregister);
  
@@ -26038,6 +26311,19 @@ index 000000000000..b54dcba05a82
 +MODULE_DESCRIPTION("ROHM BH1780GLI Ambient Light Sensor Driver");
 +MODULE_LICENSE("GPL");
 +MODULE_AUTHOR("Linus Walleij <linus.walleij@linaro.org>");
+diff --git a/drivers/iio/light/cm3232.c b/drivers/iio/light/cm3232.c
+index 263e97235ea0..fe89b6823217 100644
+--- a/drivers/iio/light/cm3232.c
++++ b/drivers/iio/light/cm3232.c
+@@ -119,7 +119,7 @@ static int cm3232_reg_init(struct cm3232_chip *chip)
+ 	if (ret < 0)
+ 		dev_err(&chip->client->dev, "Error writing reg_cmd\n");
+ 
+-	return ret;
++	return 0;
+ }
+ 
+ /**
 diff --git a/drivers/iio/light/jsa1212.c b/drivers/iio/light/jsa1212.c
 index c4e8c6b6c3c3..99a62816c3b4 100644
 --- a/drivers/iio/light/jsa1212.c
@@ -34544,6 +34830,52 @@ index 000000000000..5e6d451febeb
 +MODULE_AUTHOR("Daniel Baluta <daniel.baluta@intel.com>");
 +MODULE_DESCRIPTION("Periodic hrtimer trigger for the IIO subsystem");
 +MODULE_LICENSE("GPL v2");
+diff --git a/drivers/iio/trigger/iio-trig-interrupt.c b/drivers/iio/trigger/iio-trig-interrupt.c
+index e18f12b74610..572bc6f02ca8 100644
+--- a/drivers/iio/trigger/iio-trig-interrupt.c
++++ b/drivers/iio/trigger/iio-trig-interrupt.c
+@@ -58,7 +58,7 @@ static int iio_interrupt_trigger_probe(struct platform_device *pdev)
+ 	trig_info = kzalloc(sizeof(*trig_info), GFP_KERNEL);
+ 	if (!trig_info) {
+ 		ret = -ENOMEM;
+-		goto error_free_trigger;
++		goto error_put_trigger;
+ 	}
+ 	iio_trigger_set_drvdata(trig, trig_info);
+ 	trig_info->irq = irq;
+@@ -83,8 +83,8 @@ error_release_irq:
+ 	free_irq(irq, trig);
+ error_free_trig_info:
+ 	kfree(trig_info);
+-error_free_trigger:
+-	iio_trigger_free(trig);
++error_put_trigger:
++	iio_trigger_put(trig);
+ error_ret:
+ 	return ret;
+ }
+@@ -99,7 +99,7 @@ static int iio_interrupt_trigger_remove(struct platform_device *pdev)
+ 	iio_trigger_unregister(trig);
+ 	free_irq(trig_info->irq, trig);
+ 	kfree(trig_info);
+-	iio_trigger_free(trig);
++	iio_trigger_put(trig);
+ 
+ 	return 0;
+ }
+diff --git a/drivers/iio/trigger/iio-trig-sysfs.c b/drivers/iio/trigger/iio-trig-sysfs.c
+index 202e8b89caf2..3dfab2bc6d69 100644
+--- a/drivers/iio/trigger/iio-trig-sysfs.c
++++ b/drivers/iio/trigger/iio-trig-sysfs.c
+@@ -174,7 +174,7 @@ static int iio_sysfs_trigger_probe(int id)
+ 	return 0;
+ 
+ out2:
+-	iio_trigger_free(t->trig);
++	iio_trigger_put(t->trig);
+ free_t:
+ 	kfree(t);
+ out1:
 diff --git a/drivers/staging/iio/Documentation/sysfs-bus-iio-light b/drivers/staging/iio/Documentation/sysfs-bus-iio-light
 index 17e5c9c515d4..7c7cd8456060 100644
 --- a/drivers/staging/iio/Documentation/sysfs-bus-iio-light
@@ -35616,7 +35948,7 @@ index 1c4277dbd318..3cdd83ccec8e 100644
 -obj-$(CONFIG_MXS_LRADC) += mxs-lradc.o
  obj-$(CONFIG_SPEAR_ADC) += spear_adc.o
 diff --git a/drivers/staging/iio/adc/ad7192.c b/drivers/staging/iio/adc/ad7192.c
-index 20314ff08be0..1cf6b79801a9 100644
+index abc66908681d..1cf6b79801a9 100644
 --- a/drivers/staging/iio/adc/ad7192.c
 +++ b/drivers/staging/iio/adc/ad7192.c
 @@ -1,7 +1,7 @@
@@ -35716,7 +36048,20 @@ index 20314ff08be0..1cf6b79801a9 100644
  #define ID_AD7195		0x6
  #define AD7192_ID_MASK		0x0F
  
-@@ -332,11 +349,9 @@ static ssize_t ad7192_write_frequency(struct device *dev,
+@@ -205,9 +222,11 @@ static int ad7192_setup(struct ad7192_state *st,
+ 	struct iio_dev *indio_dev = spi_get_drvdata(st->sd.spi);
+ 	unsigned long long scale_uv;
+ 	int i, ret, id;
++	u8 ones[6];
+ 
+ 	/* reset the serial interface */
+-	ret = ad_sd_reset(&st->sd, 48);
++	memset(&ones, 0xFF, 6);
++	ret = spi_write(st->sd.spi, &ones, 6);
+ 	if (ret < 0)
+ 		goto out;
+ 	usleep_range(500, 1000); /* Wait for at least 500us */
+@@ -330,11 +349,9 @@ static ssize_t ad7192_write_frequency(struct device *dev,
  	if (lval == 0)
  		return -EINVAL;
  
@@ -35731,7 +36076,7 @@ index 20314ff08be0..1cf6b79801a9 100644
  
  	div = st->mclk / (lval * st->f_order * 1024);
  	if (div < 1 || div > 1023) {
-@@ -349,7 +364,7 @@ static ssize_t ad7192_write_frequency(struct device *dev,
+@@ -347,7 +364,7 @@ static ssize_t ad7192_write_frequency(struct device *dev,
  	ad_sd_write_reg(&st->sd, AD7192_REG_MODE, 3, st->mode);
  
  out:
@@ -35740,7 +36085,7 @@ index 20314ff08be0..1cf6b79801a9 100644
  
  	return ret ? ret : len;
  }
-@@ -417,11 +432,9 @@ static ssize_t ad7192_set(struct device *dev,
+@@ -415,11 +432,9 @@ static ssize_t ad7192_set(struct device *dev,
  	if (ret < 0)
  		return ret;
  
@@ -35755,7 +36100,7 @@ index 20314ff08be0..1cf6b79801a9 100644
  
  	switch ((u32)this_attr->address) {
  	case AD7192_REG_GPOCON:
-@@ -444,7 +457,7 @@ static ssize_t ad7192_set(struct device *dev,
+@@ -442,7 +457,7 @@ static ssize_t ad7192_set(struct device *dev,
  		ret = -EINVAL;
  	}
  
@@ -35764,7 +36109,7 @@ index 20314ff08be0..1cf6b79801a9 100644
  
  	return ret ? ret : len;
  }
-@@ -538,11 +551,9 @@ static int ad7192_write_raw(struct iio_dev *indio_dev,
+@@ -536,11 +551,9 @@ static int ad7192_write_raw(struct iio_dev *indio_dev,
  	int ret, i;
  	unsigned int tmp;
  
@@ -35779,7 +36124,7 @@ index 20314ff08be0..1cf6b79801a9 100644
  
  	switch (mask) {
  	case IIO_CHAN_INFO_SCALE:
-@@ -565,7 +576,7 @@ static int ad7192_write_raw(struct iio_dev *indio_dev,
+@@ -563,7 +576,7 @@ static int ad7192_write_raw(struct iio_dev *indio_dev,
  		ret = -EINVAL;
  	}
  
@@ -35788,7 +36133,7 @@ index 20314ff08be0..1cf6b79801a9 100644
  
  	return ret;
  }
-@@ -607,9 +618,27 @@ static const struct iio_chan_spec ad7192_channels[] = {
+@@ -605,9 +618,27 @@ static const struct iio_chan_spec ad7192_channels[] = {
  	IIO_CHAN_SOFT_TIMESTAMP(8),
  };
  
@@ -35817,7 +36162,7 @@ index 20314ff08be0..1cf6b79801a9 100644
  	struct ad7192_state *st;
  	struct iio_dev *indio_dev;
  	int ret, voltage_uv = 0;
-@@ -651,8 +680,18 @@ static int ad7192_probe(struct spi_device *spi)
+@@ -649,8 +680,18 @@ static int ad7192_probe(struct spi_device *spi)
  	indio_dev->dev.parent = &spi->dev;
  	indio_dev->name = spi_get_device_id(spi)->name;
  	indio_dev->modes = INDIO_DIRECT_MODE;
@@ -35838,7 +36183,7 @@ index 20314ff08be0..1cf6b79801a9 100644
  	if (st->devid == ID_AD7195)
  		indio_dev->info = &ad7195_info;
  	else
-@@ -699,6 +738,7 @@ static int ad7192_remove(struct spi_device *spi)
+@@ -697,6 +738,7 @@ static int ad7192_remove(struct spi_device *spi)
  static const struct spi_device_id ad7192_id[] = {
  	{"ad7190", ID_AD7190},
  	{"ad7192", ID_AD7192},
@@ -35846,7 +36191,7 @@ index 20314ff08be0..1cf6b79801a9 100644
  	{"ad7195", ID_AD7195},
  	{}
  };
-@@ -715,5 +755,5 @@ static struct spi_driver ad7192_driver = {
+@@ -713,5 +755,5 @@ static struct spi_driver ad7192_driver = {
  module_spi_driver(ad7192_driver);
  
  MODULE_AUTHOR("Michael Hennerich <hennerich@blackfin.uclinux.org>");
@@ -36676,7 +37021,7 @@ index 3adc4516918c..a10e7d8e6002 100644
  
  static ssize_t adt7316_store_DAC_internal_Vref(struct device *dev,
 diff --git a/drivers/staging/iio/cdc/ad7150.c b/drivers/staging/iio/cdc/ad7150.c
-index e8d0ff2d5c9b..f6b9a10326ea 100644
+index 808d6ebf6c94..f6b9a10326ea 100644
 --- a/drivers/staging/iio/cdc/ad7150.c
 +++ b/drivers/staging/iio/cdc/ad7150.c
 @@ -21,8 +21,8 @@
@@ -36723,6 +37068,15 @@ index e8d0ff2d5c9b..f6b9a10326ea 100644
  {
  	u8 thresh_type, cfg, adaptive;
  	int ret;
+@@ -272,7 +274,7 @@ static int ad7150_write_event_config(struct iio_dev *indio_dev,
+ error_ret:
+ 	mutex_unlock(&chip->state_lock);
+ 
+-	return ret;
++	return 0;
+ }
+ 
+ static int ad7150_read_event_value(struct iio_dev *indio_dev,
 @@ -302,11 +304,11 @@ static int ad7150_read_event_value(struct iio_dev *indio_dev,
  }
  
@@ -39324,7 +39678,7 @@ index 238481b78e72..1300a21363db 100644
 -obj-$(CONFIG_IIO_PERIODIC_RTC_TRIGGER) += iio-trig-periodic-rtc.o
  obj-$(CONFIG_IIO_BFIN_TMR_TRIGGER) += iio-trig-bfin-timer.o
 diff --git a/drivers/staging/iio/trigger/iio-trig-bfin-timer.c b/drivers/staging/iio/trigger/iio-trig-bfin-timer.c
-index 035dd456d7d6..38dca69a06eb 100644
+index 737747354db6..38dca69a06eb 100644
 --- a/drivers/staging/iio/trigger/iio-trig-bfin-timer.c
 +++ b/drivers/staging/iio/trigger/iio-trig-bfin-timer.c
 @@ -55,12 +55,12 @@ static struct bfin_timer iio_bfin_timer_code[MAX_BLACKFIN_GPTIMERS] = {
@@ -39363,6 +39717,24 @@ index 035dd456d7d6..38dca69a06eb 100644
  	if (pdata && pdata->output_enable) {
  		unsigned long long val;
  
+@@ -259,7 +260,7 @@ out_free_irq:
+ out1:
+ 	iio_trigger_unregister(st->trig);
+ out:
+-	iio_trigger_free(st->trig);
++	iio_trigger_put(st->trig);
+ 	return ret;
+ }
+ 
+@@ -272,7 +273,7 @@ static int iio_bfin_tmr_trigger_remove(struct platform_device *pdev)
+ 		peripheral_free(st->t->pin);
+ 	free_irq(st->irq, st);
+ 	iio_trigger_unregister(st->trig);
+-	iio_trigger_free(st->trig);
++	iio_trigger_put(st->trig);
+ 
+ 	return 0;
+ }
 diff --git a/include/dt-bindings/iio/adc/fsl-imx25-gcq.h b/include/dt-bindings/iio/adc/fsl-imx25-gcq.h
 new file mode 100644
 index 000000000000..87abdd4a7674
@@ -39409,6 +39781,20 @@ index 000000000000..c48aca1dcade
 +#define CH_OFFSTATE_OUT_TRISTATE	3
 +
 +#endif /* _DT_BINDINGS_ADI_AD5592R_H */
+diff --git a/include/linux/iio/adc/ad_sigma_delta.h b/include/linux/iio/adc/ad_sigma_delta.h
+index 6cc48ac55fd2..e7fdec4db9da 100644
+--- a/include/linux/iio/adc/ad_sigma_delta.h
++++ b/include/linux/iio/adc/ad_sigma_delta.h
+@@ -111,9 +111,6 @@ int ad_sd_write_reg(struct ad_sigma_delta *sigma_delta, unsigned int reg,
+ int ad_sd_read_reg(struct ad_sigma_delta *sigma_delta, unsigned int reg,
+ 	unsigned int size, unsigned int *val);
+ 
+-int ad_sd_reset(struct ad_sigma_delta *sigma_delta,
+-	unsigned int reset_length);
+-
+ int ad_sigma_delta_single_conversion(struct iio_dev *indio_dev,
+ 	const struct iio_chan_spec *chan, int *val);
+ int ad_sd_calibrate_all(struct ad_sigma_delta *sigma_delta,
 diff --git a/include/linux/iio/buffer-dma.h b/include/linux/iio/buffer-dma.h
 new file mode 100644
 index 000000000000..767467d886de
@@ -40246,5 +40632,5 @@ index 7c63bd67c36e..b0916fc72cce 100644
  
  enum iio_event_type {
 -- 
-2.14.1
+2.15.1
 

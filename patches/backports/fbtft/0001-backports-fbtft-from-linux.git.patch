@@ -1,6 +1,6 @@
-From e7dbbf8ba7c559107219f05fe5f21c8cd05aba32 Mon Sep 17 00:00:00 2001
+From 6ac8489418249d6213d155ff460e23530718e4e6 Mon Sep 17 00:00:00 2001
 From: Robert Nelson <robertcnelson@gmail.com>
-Date: Sun, 3 Sep 2017 22:48:45 -0500
+Date: Thu, 21 Dec 2017 15:03:03 -0600
 Subject: [PATCH] backports: fbtft: from: linux.git
 
 Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
@@ -2642,5 +2642,5 @@ index 071f79bd19f3..241d7c6bebde 100644
  	if (strstr(pdev->name, "fb"))
  		dev_info(dev, "%s id=%d pdata? %s\n", pdev->name, pdev->id,
 -- 
-2.14.1
+2.15.1
 

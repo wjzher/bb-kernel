@@ -194,6 +194,10 @@ rt_cleanup () {
 
 rt () {
 	echo "dir: rt"
+
+#	v4.4.103
+#	${git_bin} revert --no-edit cb1831a83e54cd3269a2420fce81c4fd8ae6f667
+
 	rt_patch="${KERNEL_REL}${kernel_rt}"
 	#regenerate="enable"
 	if [ "x${regenerate}" = "xenable" ] ; then
@@ -211,6 +215,49 @@ rt () {
 	${git} "${DIR}/patches/rt/0001-merge-CONFIG_PREEMPT_RT-Patch-Set.patch"
 }
 
+wireguard_fail () {
+	echo "WireGuard failed"
+	exit 2
+}
+
+wireguard () {
+	echo "dir: WireGuard"
+	#regenerate="enable"
+	if [ "x${regenerate}" = "xenable" ] ; then
+		cd ../
+		if [ ! -d ./WireGuard ] ; then
+			${git_bin} clone https://git.zx2c4.com/WireGuard --depth=1
+		else
+			rm -rf ./WireGuard || true
+			${git_bin} clone https://git.zx2c4.com/WireGuard --depth=1
+		fi
+		cd ./KERNEL/
+
+		../WireGuard/contrib/kernel-tree/create-patch.sh | patch -p1 || wireguard_fail
+
+		${git_bin} add .
+		${git_bin} commit -a -m 'merge: WireGuard' -s
+		${git_bin} format-patch -1 -o ../patches/WireGuard/
+
+		rm -rf ../WireGuard/ || true
+
+		exit 2
+	fi
+
+	#regenerate="enable"
+	if [ "x${regenerate}" = "xenable" ] ; then
+		start_cleanup
+	fi
+
+	${git} "${DIR}/patches/WireGuard/0001-merge-WireGuard.patch"
+
+	if [ "x${regenerate}" = "xenable" ] ; then
+		wdir="WireGuard"
+		number=1
+		cleanup
+	fi
+}
+
 local_patch () {
 	echo "dir: dir"
 	${git} "${DIR}/patches/dir/0001-patch.patch"
@@ -219,6 +266,7 @@ local_patch () {
 #external_git
 aufs4
 rt
+wireguard
 #local_patch
 
 pre_backports () {
@@ -364,6 +412,17 @@ lts44_backports () {
 	${git} "${DIR}/patches/backports/iio/0013-iio-proximity-as3935-recalibrate-RCO-after-resume.patch"
 	${git} "${DIR}/patches/backports/iio/0014-iio-accel-bmc150-Always-restore-device-to-normal-mod.patch"
 	${git} "${DIR}/patches/backports/iio/0015-iio-light-tsl2563-use-correct-event-code.patch"
+	${git} "${DIR}/patches/backports/iio/0016-iio-adc-twl4030-Fix-an-error-handling-path-in-twl403.patch"
+	${git} "${DIR}/patches/backports/iio/0017-iio-adc-twl4030-Disable-the-vusb3v1-rugulator-in-the.patch"
+	${git} "${DIR}/patches/backports/iio/0018-iio-ad_sigma_delta-Implement-a-dedicated-reset-funct.patch"
+	${git} "${DIR}/patches/backports/iio/0019-staging-iio-ad7192-Fix-use-the-dedicated-reset-funct.patch"
+	${git} "${DIR}/patches/backports/iio/0020-iio-core-Return-error-for-failed-read_reg.patch"
+	${git} "${DIR}/patches/backports/iio/0021-iio-ad7793-Fix-the-serial-interface-reset.patch"
+	${git} "${DIR}/patches/backports/iio/0022-iio-adc-mcp320x-Fix-readout-of-negative-voltages.patch"
+	${git} "${DIR}/patches/backports/iio/0023-iio-adc-mcp320x-Fix-oops-on-module-unload.patch"
+	${git} "${DIR}/patches/backports/iio/0024-iio-trigger-free-trigger-resource-correctly.patch"
+	${git} "${DIR}/patches/backports/iio/0025-iio-light-fix-improper-return-value.patch"
+	${git} "${DIR}/patches/backports/iio/0026-staging-iio-cdc-fix-improper-return-value.patch"
 
 	backport_tag="v4.8.17"
 
@@ -420,9 +479,10 @@ reverts () {
 	fi
 
 	${git} "${DIR}/patches/reverts/0001-Revert-spi-spidev-Warn-loudly-if-instantiated-from-D.patch"
+	${git} "${DIR}/patches/reverts/0002-Revert-workqueue-Fix-NULL-pointer-dereference.patch"
 
 	if [ "x${regenerate}" = "xenable" ] ; then
-		number=1
+		number=2
 		cleanup
 	fi
 }
@@ -708,9 +768,10 @@ bbb_overlays () {
 	${git} "${DIR}/patches/bbb_overlays/0037-of-Support-hashtable-lookups-for-phandles.patch"
 
 	${git} "${DIR}/patches/bbb_overlays/0038-bone_capemgr-uboot_capemgr_enabled-flag.patch"
+	${git} "${DIR}/patches/bbb_overlays/0039-bone_capemgr-kill-with-uboot-flag.patch"
 
 	if [ "x${regenerate}" = "xenable" ] ; then
-		number=38
+		number=39
 		cleanup
 	fi
 }
@@ -1150,6 +1211,7 @@ beaglebone
 quieter
 gcc6
 dir 'drivers/ti/mmc'
+dir 'drivers/gadget'
 sgx
 
 sync_mainline_dtc () {
